@@ -69,9 +69,12 @@ Cosmic/
 │ └── Zodiacs.ts
 ├── types/ # Shared TypeScript types
 │ └── index.ts
+
 ├── assets/ # Images, fonts, icons
+
 └── README.md # This file
-text## Technical Choices & Why
+
+## Technical Choices & Why
 
 - **Expo Router** instead of React Navigation → file-based routing is simpler, dynamic params are built-in, meets course G/VG navigation requirements
 - **NativeWind** → allows real Tailwind syntax in React Native, dark mode support, easy theme extension
