@@ -48,6 +48,7 @@ Fetches real-time daily horoscopes and tarot cards from the public [freehoroscop
 ## Project Structure
 
 Cosmic/
+
 ├── app/ # Expo Router screens & layout
 
 │ ├── \_layout.tsx # Root layout + StarField bg
