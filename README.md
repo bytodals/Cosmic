@@ -49,25 +49,45 @@ Fetches real-time daily horoscopes and tarot cards from the public [freehoroscop
 
 Cosmic/
 ├── app/ # Expo Router screens & layout
+
 │ ├── \_layout.tsx # Root layout + StarField bg
+
 │ ├── index.tsx # Home – zodiac list
+
 │ ├── horoscope/[sign].tsx # Dynamic horoscope detail
+
 │ ├── tarot.tsx # Daily tarot draw
+
 │ └── cards.tsx # Tarot meanings + search
+
 ├── components/ # Reusable UI pieces
+
 │ ├── StarField.tsx # Animated cosmic background
+
 │ ├── ZodiacCard.tsx
+
 │ ├── ZodiacIcon.tsx
+
 │ ├── BirthDetailsModal.tsx
+
 │ └── ui/ # Button, future shadcn-like components
+
 ├── hooks/ # Custom logic (VG requirement)
+
 │ ├── useDailyHoroscope.ts
+
 │ └── useDailyTarot.ts
+
 ├── lib/ # Utilities
+
 │ └── birthDetailsStorage.ts # AsyncStorage + zodiac inference
+
 ├── data/ # Static data
+
 │ └── Zodiacs.ts
+
 ├── types/ # Shared TypeScript types
+
 │ └── index.ts
 
 ├── assets/ # Images, fonts, icons
