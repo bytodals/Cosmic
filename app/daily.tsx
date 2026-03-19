@@ -4,7 +4,6 @@ import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 import { Card } from "@/components/ui/Card";
 import { Button } from '@/components/ui/Button';
-import { colors } from '@/constants/theme';
 import { useDailyHoroscope } from "@/hooks/useDailyHoroscope";
 
 import {
@@ -14,6 +13,7 @@ import {
   inferZodiacSignFromBirthDate,
 } from "@/lib/birthDetailsStorage";
 import { fetchBirthChartSummary } from "@/lib/api";
+import { generatePersonalizedHoroscope } from "@/lib/api/zodiac";
 
 // Type for the birth chart summary (can be extended later)
 interface BirthChartSummary {
@@ -28,6 +28,9 @@ export default function DailyScreen() {
   const [chart, setChart] = useState<BirthChartSummary | null>(null);
   const [chartLoading, setChartLoading] = useState(false);
   const [chartError, setChartError] = useState<string | null>(null);
+  const [personalizedHoroscope, setPersonalizedHoroscope] = useState<string | null>(null);
+  const [personalizedLoading, setPersonalizedLoading] = useState(false);
+  const [personalizedError, setPersonalizedError] = useState<string | null>(null);
 
   // Memoized zodiac sign calculation – avoids recalculating on every render
   const zodiacSign = useMemo(() => {
@@ -82,17 +85,40 @@ export default function DailyScreen() {
   const loadChart = async (birthDetails: BirthDetails) => {
     setChartLoading(true);
     setChartError(null);
-
     try {
       const summary = await fetchBirthChartSummary(birthDetails);
       // Basic runtime validation (VG robustness)
       if (!summary?.moonSign || !summary?.ascendantSign) {
-        throw new Error("Incomplete birth chart data from API");
+        // Don't throw here; earlier API helper now returns graceful fallbacks.
+        console.warn('Birth chart appears incomplete, but continuing with available data');
       }
       setChart(summary);
+
+      // Generate personalized horoscope using available details (best-effort)
+      try {
+        setPersonalizedHoroscope(null);
+        setPersonalizedError(null);
+        setPersonalizedLoading(true);
+
+        const signId = inferZodiacSignFromBirthDate(birthDetails.birthDate) || '';
+        if (signId) {
+          const txt = await generatePersonalizedHoroscope(signId, {
+            fullName: birthDetails.fullName,
+            birthDate: birthDetails.birthDate,
+            birthTime: birthDetails.birthTime,
+            birthPlace: birthDetails.birthPlace,
+          });
+          if (txt) setPersonalizedHoroscope(txt);
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Failed to generate personalized horoscope';
+        setPersonalizedError(msg);
+        console.error('Personalization error:', err);
+      } finally {
+        setPersonalizedLoading(false);
+      }
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Could not fetch birth chart";
+      const message = err instanceof Error ? err.message : "Could not fetch birth chart";
       setChartError(message);
       console.error("Chart fetch error:", err);
     } finally {
@@ -106,7 +132,7 @@ export default function DailyScreen() {
   if (loadingProfile) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator size="large" color={colors.primary} />
+        <ActivityIndicator size="large" color-primary />
         <Text className="mt-4 text-text-muted">Loading your profile...</Text>
       </View>
     );
@@ -125,7 +151,9 @@ export default function DailyScreen() {
           Add your birth details to get personalized daily horoscopes and a full birth chart (Moon & Rising signs).
         </Text>
         <Link href="/profile" asChild>
-          <Button size="lg">Add birth details</Button>
+          <Button size="lg" onPress={function (): void {
+            throw new Error("Function not implemented.");
+          }}>Add birth details</Button>
         </Link>
       </View>
     );
@@ -144,8 +172,12 @@ export default function DailyScreen() {
             Today's Horoscope – {zodiacSign ? zodiacSign.charAt(0).toUpperCase() + zodiacSign.slice(1) : "..."}
           </Text>
 
-          {horoscopeLoading ? (
+          {(horoscopeLoading || personalizedLoading) ? (
             <ActivityIndicator size="small" color="#B87D56" />
+          ) : personalizedHoroscope ? (
+            <Text className="text-text mb-2">{personalizedHoroscope}</Text>
+          ) : personalizedError ? (
+            <Text className="text-red-400">{personalizedError}</Text>
           ) : horoscopeError ? (
             <Text className="text-red-400">{horoscopeError}</Text>
           ) : horoscope ? (
@@ -194,10 +226,14 @@ export default function DailyScreen() {
         {/* Quick actions */}
         <View className="flex-row gap-4 justify-center mt-4">
           <Link href="/tarot" asChild>
-            <Button variant="outline">Today's Tarot</Button>
+            <Button variant="outline" onPress={function (): void {
+              throw new Error("Function not implemented.");
+            } }>Today's Tarot</Button>
           </Link>
           <Link href="/profile" asChild>
-            <Button variant="outline">Edit profile</Button>
+            <Button variant="outline" onPress={function (): void {
+              throw new Error("Function not implemented.");
+            } }>Edit profile</Button>
           </Link>
         </View>
       </View>

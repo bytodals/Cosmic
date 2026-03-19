@@ -8,31 +8,40 @@ const BASE_URL = 'https://freehoroscopeapi.com/api/v1';
 
 /**
  * Fetch today's horoscope for a given zodiac sign
- * @param sign - Zodiac sign ID (lowercase, e.g. 'aries')
- * @returns Horoscope data or throws error
+ * Accepts both API shapes: { data: {...} } and { horoscope, sign, date }
  */
 export async function fetchDailyHoroscope(sign: ZodiacId): Promise<HoroscopeResponse['data']> {
+  const s = String(sign || '').toLowerCase();
   try {
-    const url = `${BASE_URL}/get-horoscope/daily?sign=${encodeURIComponent(sign)}`;
+    const url = `${BASE_URL}/get-horoscope/daily?sign=${encodeURIComponent(s)}`;
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status} ${response.statusText}`);
+      const body = await response.text().catch(() => '');
+      throw new Error(`API error: ${response.status} ${response.statusText}${body ? ` - ${body}` : ''}`);
     }
 
-    const json: HoroscopeResponse = await response.json();
+    const jsonRaw: any = await response.json();
 
-    // Basic runtime validation (VG robustness)
-    if (!json.data || !json.data.horoscope || !json.data.sign) {
-      throw new Error('Invalid response format from horoscope API');
+    // If API returns { data: { ... } }
+    if (jsonRaw && jsonRaw.data && jsonRaw.data.horoscope && jsonRaw.data.sign) {
+      return jsonRaw.data as HoroscopeResponse['data'];
     }
 
-    return json.data;
+    // Some deployments return top-level fields (horoscope/sign/date)
+    if (jsonRaw && (jsonRaw.horoscope || jsonRaw.sign)) {
+      return {
+        date: jsonRaw.date || new Date().toISOString().split('T')[0],
+        period: 'daily',
+        sign: jsonRaw.sign || s,
+        horoscope: (jsonRaw.horoscope || '').toString(),
+      } as HoroscopeResponse['data'];
+    }
+
+    throw new Error('Invalid response format from horoscope API');
   } catch (error) {
     console.error('Failed to fetch daily horoscope:', error);
-    throw error instanceof Error 
-      ? error 
-      : new Error('Unknown error fetching horoscope');
+    throw error instanceof Error ? error : new Error('Unknown error fetching horoscope');
   }
 }
 

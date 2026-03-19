@@ -1,13 +1,15 @@
-// hooks/useDailyHoroscope.ts
-// Custom hook that fetches, caches (24h), and handles errors for daily horoscope.
-// This is the core of VG-level code quality.
+// Custom hook for daily horoscope.
 
 import { useState, useEffect, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { fetchDailyHoroscope } from "@/lib/api/horoscope";
+import type { HoroscopeResponse } from "@/lib/types";
 
 export interface DailyHoroscope {
   mood: any;
   date: string;
+  period?: 'daily' | 'weekly' | 'monthly';
+  sign?: string;
   horoscope: string;
 }
 
@@ -23,6 +25,12 @@ export function useDailyHoroscope(sign: string) {
     setLoading(true);
     setError(null);
 
+    if (!sign) {
+      setData(null);
+      setLoading(false);
+      return;
+    }
+
     try {
       // Check cache first
       const cacheKey = `${CACHE_PREFIX}${sign.toLowerCase()}`;
@@ -30,23 +38,26 @@ export function useDailyHoroscope(sign: string) {
 
       if (cached) {
         const parsed = JSON.parse(cached);
+        // Respect cache TTL but ignore cached entries lacking a usable horoscope text
         if (Date.now() - parsed.timestamp < CACHE_HOURS * 60 * 60 * 1000) {
-          setData(parsed.data);
-          setLoading(false);
-          return;
+          const cachedHoroscope = parsed.data?.horoscope;
+          if (cachedHoroscope && String(cachedHoroscope).trim().length > 0) {
+            setData(parsed.data);
+            setLoading(false);
+            return;
+          }
+          // otherwise fall through to fetch fresh data
         }
       }
 
-      // Fetch from API
-      const res = await fetch(
-        `https://freehoroscopeapi.com/api/v1/get-horoscope/daily?sign=${sign.toLowerCase()}`
-      );
-      if (!res.ok) throw new Error('Network error');
+      // Use the shared API helper which validates the response format
+      const json = await fetchDailyHoroscope(sign as any);
 
-      const json = await res.json();
       const freshData: DailyHoroscope = {
         date: json.date || new Date().toISOString().split('T')[0],
-        horoscope: json.horoscope?.trim() || 'No horoscope available today.',
+        period: json.period,
+        sign: json.sign,
+        horoscope: (json.horoscope || 'No horoscope available today.').toString(),
         mood: undefined
       };
 

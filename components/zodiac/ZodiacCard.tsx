@@ -13,7 +13,7 @@ type ZodiacCardProps = {
 
 export default function ZodiacCard(props: ZodiacCardProps) {
   const { sign, index, onPress, size } = props;
-  // If onPress is provided, render a Pressable that calls it; otherwise use link to navigate.
+  // If onPress is provided, render a Pressable that calls it; otherwise use Link to navigate.
   const elementColor = elementColors[sign.element];
   const cardSize = (sz: ZodiacCardProps['size']) => ({
     padding: sz === 'sm' ? 'p-4' : 'p-5',
@@ -27,7 +27,7 @@ export default function ZodiacCard(props: ZodiacCardProps) {
   const Inner = (
     <Pressable
       onPress={onPress}
-      className={`rounded-2xl border border-border bg-card/70 ${s.padding} active:opacity-95 items-center`}
+      className={`rounded-2xl border border-border bg-card/70 ${s.padding} active:opacity-75 items-center`}
     >
       <Text className={`${s.emoji}`}>{sign.emoji}</Text>
       <Text className={`${s.name} font-display text-foreground`}>{sign.name}</Text>

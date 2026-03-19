@@ -43,7 +43,7 @@ export async function fetchZodiacInfo(signId: string): Promise<ZodiacInfo> {
     name: local.name,
     dates: local.dates,
     element: local.element,
-    description: undefined,
+    description: local.description || undefined,
   };
 }
 

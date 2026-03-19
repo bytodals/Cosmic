@@ -33,6 +33,11 @@ export default function ZodiacDetailsModal({ visible, sign, onClose }: Props) {
     };
   }, [visible, sign?.id]);
 
+  useEffect(() => {
+    if (!visible || !sign) return;
+    console.debug('[ZodiacDetailsModal] debug', { signId: sign.id, loading, data, zodiacInfo });
+  }, [visible, sign?.id, loading, data, zodiacInfo]);
+
   return (
     <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
       <TouchableWithoutFeedback onPress={onClose}>
@@ -58,7 +63,7 @@ export default function ZodiacDetailsModal({ visible, sign, onClose }: Props) {
                     <View className="items-center py-6">
                       <ActivityIndicator size="large" color="primary" />
                     </View>
-                  ) : data ? (
+                  ) : (data && (data.horoscope || '').trim().length > 0) ? (
                     <Text className="text-text mt-2">{data.horoscope}</Text>
                   ) : zodiacInfo?.description ? (
                     <Text className="text-text mt-2">{zodiacInfo.description}</Text>
