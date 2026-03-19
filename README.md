@@ -86,12 +86,7 @@ Endpoints:
 
 All responses are typed with interfaces in `types/index.ts`.
 
-## Future Improvements
 
-- Weekly/monthly horoscope tabs
-- Save favorite tarot cards
-- Share daily insight as image
-- Moon/rising sign calculation (if API expands)
 
 ---
 
