@@ -25,20 +25,32 @@ export async function fetchBirthChartSummary(details: {
       }),
     });
 
-    if (!response.ok) {
-      throw new Error(`Birth chart API error: ${response.status}`);
+    if (response.ok) {
+      const data = await response.json();
+      return {
+        moonSign: data.moonSign ?? 'Unknown',
+        ascendantSign: data.ascendantSign ?? 'Unknown',
+        summary: data.summary ?? undefined,
+      };
     }
 
-    const data = await response.json();
+    // Non-OK response: attempt to surface helpful logs but return a graceful fallback
+    let bodyText: string | null = null;
+    try {
+      bodyText = await response.text();
+    } catch (e) {
+      /* ignore */
+    }
+    console.warn(`Birth chart API returned ${response.status}${bodyText ? ` - ${bodyText}` : ''}`);
 
     return {
-      moonSign: data.moonSign || 'Unknown',
-      ascendantSign: data.ascendantSign || 'Unknown',
-      summary: data.summary || undefined,
+      moonSign: 'Moon sign unavailable',
+      ascendantSign: 'Ascendant unavailable',
+      summary: undefined,
     };
   } catch (error) {
     console.error('Failed to fetch birth chart:', error);
-    // return fallback 
+    // return graceful fallback so the UI can continue to render
     return {
       moonSign: 'Moon sign unavailable',
       ascendantSign: 'Ascendant unavailable',
