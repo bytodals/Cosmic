@@ -2,7 +2,7 @@ import "../globals.css";
 import { useEffect } from "react";
 import { Stack } from "expo-router";
 import { Platform, View } from "react-native";
-import StarField from "@/components/StarField";
+import StarField from "@/components/effects/StarField";
 
 export default function RootLayout() {
 	useEffect(() => {
@@ -42,12 +42,10 @@ export default function RootLayout() {
           }}
           initialRouteName="index">
           <Stack.Screen name="index" />
-					<Stack.Screen name="home" />
 					<Stack.Screen name="daily" />
-					<Stack.Screen name="profile" />
-          <Stack.Screen name="horoscope/[sign]" />
-          <Stack.Screen name="tarot" />
-          <Stack.Screen name="cards" />
+		        <Stack.Screen name="horoscope/[sign]" />
+	          <Stack.Screen name="tarot/about-tarot" />
+	      	  <Stack.Screen name="tarot/index" />
         </Stack>
 			</View>
 		</View>

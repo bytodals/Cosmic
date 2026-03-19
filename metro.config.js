@@ -1,6 +1,12 @@
-const { getDefaultConfig } = require("expo/metro-config");
-const { withNativeWind } = require("nativewind/metro");
+const { getDefaultConfig } = require('expo/metro-config');
+const { withNativeWind } = require('nativewind/metro');
 
-const config = getDefaultConfig(__dirname);
+const config = getDefaultConfig(__dirname, {
 
-module.exports = withNativeWind(config, { input: "./globals.css" });
+  isCSSEnabled: true, // om du använder CSS → Tailwind/NativeWind
+});
+
+module.exports = withNativeWind(config, {
+  // must match the actual globals file name used in the repo
+  input: './globals.css',
+});

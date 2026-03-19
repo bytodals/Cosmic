@@ -9,6 +9,7 @@ interface ButtonProps {
 	variant?: ButtonVariant;
 	size?: "lg" | "md";
 	disabled?: boolean;
+	style?: any;
 }
 
 export function Button({
@@ -17,6 +18,7 @@ export function Button({
 	variant = "default",
 	size = "lg",
 	disabled = false,
+	style,
 }: ButtonProps) {
 	const isOutline = variant === "outline";
 	const label =
@@ -43,6 +45,7 @@ export function Button({
 				isOutline ? styles.outline : styles.default,
 				disabled && styles.disabled,
 				pressed && !disabled && styles.pressed,
+				style,
 			]}>
 			{label}
 		</Pressable>

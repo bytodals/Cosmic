@@ -1,38 +1,28 @@
-import { useCallback, useEffect, useState } from "react";
-import { fetchDailyTarotInsight } from "@/lib/api";
-import type { DailyTarotInsight } from "@/types";
+import { useState, useEffect, useCallback } from 'react';
+import { fetchRandomTarot } from '@/lib/api/tarot';
+import { TarotCard } from '@/lib/types';
 
 export function useDailyTarot() {
-  const [tarot, setTarot] = useState<DailyTarotInsight | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [card, setCard] = useState<TarotCard | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const refresh = useCallback(async () => {
+  const loadCard = useCallback(async () => {
     setLoading(true);
     setError(null);
-
     try {
-      const insight = await fetchDailyTarotInsight();
-      setTarot(insight);
-    } catch (fetchError) {
-      setError(
-        fetchError instanceof Error
-          ? fetchError.message
-          : "Could not load tarot insight right now.",
-      );
+      const [drawn] = await fetchRandomTarot(1);
+      setCard(drawn);
+    } catch (err) {
+      setError((err as Error).message || 'Failed to load today\'s tarot card');
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    loadCard();
+  }, [loadCard]);
 
-  return {
-    tarot,
-    loading,
-    error,
-    refresh,
-  };
+  return { card, loading, error };
 }

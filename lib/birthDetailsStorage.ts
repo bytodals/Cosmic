@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { ZodiacId } from "@/types";
+import type { ZodiacId } from "./types";
 
 export interface BirthDetails {
 	fullName: string;

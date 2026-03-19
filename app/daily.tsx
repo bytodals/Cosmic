@@ -1,241 +1,211 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { Link, useFocusEffect } from "expo-router";
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
-import Button from "@/components/ui/button";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+
+import { Card } from "@/components/ui/Card";
+import { Button } from '@/components/ui/Button';
 import { useDailyHoroscope } from "@/hooks/useDailyHoroscope";
-import { useDailyTarot } from "@/hooks/useDailyTarot";
+
 import {
-	BirthDetails,
-	getBirthDetails,
-	hasCompletedBirthDetails,
-	inferZodiacSignFromBirthDate,
+  BirthDetails,
+  getBirthDetails,
+  hasCompletedBirthDetails,
+  inferZodiacSignFromBirthDate,
 } from "@/lib/birthDetailsStorage";
 import { fetchBirthChartSummary } from "@/lib/api";
 
+// Type for the birth chart summary (can be extended later)
+interface BirthChartSummary {
+  moonSign: string;
+  ascendantSign: string;
+  summary?: string;
+}
+
 export default function DailyScreen() {
-	const [details, setDetails] = useState<BirthDetails | null>(null);
-	const [loadingProfile, setLoadingProfile] = useState(true);
-	const [chart, setChart] = useState<{
-		moonSign: string;
-		ascendantSign: string;
-		summary?: string;
-	} | null>(null);
-	const [chartLoading, setChartLoading] = useState(false);
+  const [details, setDetails] = useState<BirthDetails | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [chart, setChart] = useState<BirthChartSummary | null>(null);
+  const [chartLoading, setChartLoading] = useState(false);
+  const [chartError, setChartError] = useState<string | null>(null);
 
-	useFocusEffect(
-		useCallback(() => {
-			let isMounted = true;
+  // Memoized zodiac sign calculation – avoids recalculating on every render
+  const zodiacSign = useMemo(() => {
+    return details ? inferZodiacSignFromBirthDate(details.birthDate) : null;
+  }, [details]);
 
-			const loadProfile = async () => {
-				setLoadingProfile(true);
-				const savedDetails = await getBirthDetails();
+  // Custom hook for today's horoscope (good VG practice: logic extracted)
+  const { data: horoscope, loading: horoscopeLoading, error: horoscopeError } =
+    useDailyHoroscope(zodiacSign ?? "");
 
-				if (!isMounted) {
-					return;
-				}
+  // Reload profile & chart when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
 
-				setDetails(savedDetails);
-				setLoadingProfile(false);
+      const loadProfile = async () => {
+        if (!isActive) return;
 
-				if (!hasCompletedBirthDetails(savedDetails)) {
-					setChart(null);
-					return;
-				}
+        setLoadingProfile(true);
+        setChart(null); // reset chart when reloading profile
+        setChartError(null);
 
-				setChartLoading(true);
-				const chartSummary = await fetchBirthChartSummary(savedDetails);
+        try {
+          const storedDetails = await getBirthDetails();
+          if (isActive) {
+            setDetails(storedDetails);
+            setLoadingProfile(false);
 
-				if (!isMounted) {
-					return;
-				}
+            // Only attempt to load chart if we have enough birth data
+            if (hasCompletedBirthDetails(storedDetails)) {
+              await loadChart(storedDetails);
+            }
+          }
+        } catch (err) {
+          console.error("Failed to load birth details:", err);
+          if (isActive) {
+            setLoadingProfile(false);
+          }
+        }
+      };
 
-				setChart(chartSummary);
-				setChartLoading(false);
-			};
+      loadProfile();
 
-			void loadProfile();
+      // Cleanup: prevent state updates after component unmount / blur
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
-			return () => {
-				isMounted = false;
-			};
-		}, []),
-	);
+  // Load birth chart summary (extracted function = easier to test & reuse)
+  const loadChart = async (birthDetails: BirthDetails) => {
+    setChartLoading(true);
+    setChartError(null);
 
-	const zodiacSign = useMemo(() => {
-		if (!details) {
-			return "";
-		}
+    try {
+      const summary = await fetchBirthChartSummary(birthDetails);
+      // Basic runtime validation (VG robustness)
+      if (!summary?.moonSign || !summary?.ascendantSign) {
+        throw new Error("Incomplete birth chart data from API");
+      }
+      setChart(summary);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Could not fetch birth chart";
+      setChartError(message);
+      console.error("Chart fetch error:", err);
+    } finally {
+      setChartLoading(false);
+    }
+  };
 
-		return details.zodiacSign || inferZodiacSignFromBirthDate(details.birthDate) || "";
-	}, [details]);
+  // ────────────────────────────────────────────────
+  // Loading state – full screen
+  // ────────────────────────────────────────────────
+  if (loadingProfile) {
+    return (
+      <View className="flex-1 items-center justify-center bg-background">
+        <ActivityIndicator size="large" color="#B87D56" />
+        <Text className="mt-4 text-text-muted">Loading your profile...</Text>
+      </View>
+    );
+  }
 
-	const horoscope = useDailyHoroscope(zodiacSign, {
-		fullName: details?.fullName,
-		moonSign: chart?.moonSign,
-		ascendantSign: chart?.ascendantSign,
-	});
-	const tarot = useDailyTarot();
+  // ────────────────────────────────────────────────
+  // No birth details → onboarding prompt
+  // ────────────────────────────────────────────────
+  if (!details || !hasCompletedBirthDetails(details)) {
+    return (
+      <View className="flex-1 items-center justify-center bg-background px-6 py-12">
+        <Text className="text-2xl font-semibold text-foreground mb-4 text-center">
+          Your cosmic journey starts here ✨
+        </Text>
+        <Text className="text-center text-text-muted mb-8 max-w-md">
+          Add your birth details to get personalized daily horoscopes and a full birth chart (Moon & Rising signs).
+        </Text>
+        <Link href="/profile" asChild>
+          <Button size="lg" onPress={function (): void {
+            throw new Error("Function not implemented.");
+          }}>Add birth details</Button>
+        </Link>
+      </View>
+    );
+  }
 
-	if (loadingProfile) {
-		return (
-			<View className="flex-1 items-center justify-center px-6">
-				<ActivityIndicator color="#D4C0F7" size="large" />
-				<Text className="mt-4 text-center font-body text-base text-text-muted">
-					Preparing your personal cosmic view...
-				</Text>
-			</View>
-		);
-	}
+  // ────────────────────────────────────────────────
+  // Main content – user has birth details
+  // ────────────────────────────────────────────────
+  return (
+    <ScrollView className="flex-1 bg-background">
+      <View className="p-5 pt-8">
 
-	if (!hasCompletedBirthDetails(details)) {
-		return (
-			<View className="flex-1 justify-center px-6">
-				<View className="rounded-3xl border border-border/40 bg-card p-6">
-					<Text className="font-display text-3xl text-card-foreground">
-						Add your birth details first
-					</Text>
-					<Text className="mt-3 font-body text-base text-text-muted">
-						Add birth date, time and place to personalize your daily horoscope,
-						tarot, moon sign and ascendant.
-					</Text>
-					<View className="mt-5 gap-3">
-						<Link href="/profile" asChild>
-							<Pressable className="rounded-xl bg-[#B87D56] px-4 py-3">
-								<Text className="text-center font-body font-semibold text-foreground">
-									Add birth details
-								</Text>
-							</Pressable>
-						</Link>
-						<Link href="/home" asChild>
-							<Pressable className="rounded-xl border border-border/40 px-4 py-3">
-								<Text className="text-center font-body font-semibold text-card-foreground">
-									Back to zodiac cards
-								</Text>
-							</Pressable>
-						</Link>
-					</View>
-				</View>
-			</View>
-		);
-	}
+        {/* Today's Horoscope Section */}
+        <Card className="mb-6">
+          <Text className="text-xl font-semibold text-foreground mb-3">
+            Today's Horoscope – {zodiacSign ? zodiacSign.charAt(0).toUpperCase() + zodiacSign.slice(1) : "..."}
+          </Text>
 
-	const firstName = details.fullName.trim().split(" ")[0] || details.fullName;
+          {horoscopeLoading ? (
+            <ActivityIndicator size="small" color="#B87D56" />
+          ) : horoscopeError ? (
+            <Text className="text-red-400">{horoscopeError}</Text>
+          ) : horoscope ? (
+            <>
+              <Text className="text-text mb-2">{horoscope.horoscope}</Text>
+              {horoscope.mood && (
+                <Text className="text-sm text-text-muted italic">
+                  Mood: {horoscope.mood}
+                </Text>
+              )}
+            </>
+          ) : (
+            <Text className="text-text-muted">No horoscope available today</Text>
+          )}
+        </Card>
 
-	return (
-		<ScrollView className="flex-1" contentContainerClassName="px-5 pt-12 pb-10">
-			<Text className="text-center font-display text-4xl font-bold text-foreground">
-				Daily Cosmic
-			</Text>
-			<Text className="mt-2 text-center font-body text-lg text-text-muted">
-				Hi {firstName}, here&apos;s your personal energy for today.
-			</Text>
+        {/* Birth Chart Summary */}
+        <Card className="mb-6">
+          <Text className="text-xl font-semibold text-foreground mb-3">
+            Your Birth Chart Highlights
+          </Text>
 
-			<View className="mt-7 rounded-2xl border border-border/40 bg-card p-4">
-				<Text className="font-display text-xl text-card-foreground">Your chart profile</Text>
-				<Text className="mt-2 font-body text-sm text-text-muted">
-					Sun sign: {zodiacSign || "Unknown"}
-				</Text>
-				{chartLoading && (
-					<Text className="mt-1 font-body text-sm text-text-muted">
-						Calculating moon sign and ascendant from API...
-					</Text>
-				)}
-				{!chartLoading && chart && (
-					<>
-						<Text className="mt-1 font-body text-sm text-text-muted">
-							Moon sign: {chart.moonSign}
-						</Text>
-						<Text className="mt-1 font-body text-sm text-text-muted">
-							Ascendant: {chart.ascendantSign}
-						</Text>
-						{!!chart.summary && (
-							<Text className="mt-2 font-body text-sm text-text-muted">
-								{chart.summary}
-							</Text>
-						)}
-					</>
-				)}
-				{!chartLoading && !chart && (
-					<Text className="mt-1 font-body text-sm text-text-muted">
-						Moon sign + ascendant need API support for birth chart in your `.env`.
-					</Text>
-				)}
-			</View>
+          {chartLoading ? (
+            <ActivityIndicator size="small" color="#B87D56" />
+          ) : chartError ? (
+            <Text className="text-red-400">{chartError}</Text>
+          ) : chart ? (
+            <View className="gap-3">
+              <View className="flex-row justify-between">
+                <Text className="text-text">Moon sign:</Text>
+                <Text className="text-primary font-medium">{chart.moonSign}</Text>
+              </View>
+              <View className="flex-row justify-between">
+                <Text className="text-text">Rising sign:</Text>
+                <Text className="text-primary font-medium">{chart.ascendantSign}</Text>
+              </View>
+              {chart.summary && (
+                <Text className="text-text-muted mt-2">{chart.summary}</Text>
+              )}
+            </View>
+          ) : (
+            <Text className="text-text-muted">Birth chart not loaded yet</Text>
+          )}
+        </Card>
 
-			<View className="mt-4 rounded-2xl border border-border/40 bg-card p-4">
-				<Text className="font-display text-xl text-card-foreground">
-					Today&apos;s personalized horoscope
-				</Text>
-				{horoscope.loading ? (
-					<Text className="mt-3 font-body text-sm text-text-muted">Loading...</Text>
-				) : horoscope.error ? (
-					<Text className="mt-3 font-body text-sm text-[#F4B8B8]">
-						{horoscope.error}
-					</Text>
-				) : (
-					<Text className="mt-3 font-body text-base leading-6 text-text-muted">
-						{horoscope.horoscope}
-					</Text>
-				)}
-
-				<View className="mt-4">
-					<Button onPress={() => void horoscope.refresh()} size="md">
-						Refresh horoscope
-					</Button>
-				</View>
-			</View>
-
-			<View className="mt-4 rounded-2xl border border-border/40 bg-card p-4">
-				<Text className="font-display text-xl text-card-foreground">
-					Today&apos;s tarot insight
-				</Text>
-				{tarot.loading ? (
-					<Text className="mt-3 font-body text-sm text-text-muted">Drawing your card...</Text>
-				) : tarot.error ? (
-					<Text className="mt-3 font-body text-sm text-[#F4B8B8]">{tarot.error}</Text>
-				) : tarot.tarot ? (
-					<>
-						<Text className="mt-3 font-body text-base font-semibold text-card-foreground">
-							{tarot.tarot.card.name}
-						</Text>
-						<Text className="mt-2 font-body text-base leading-6 text-text-muted">
-							{tarot.tarot.insight}
-						</Text>
-					</>
-				) : null}
-
-				<View className="mt-4 flex-row gap-3">
-					<View className="flex-1">
-						<Button onPress={() => void tarot.refresh()} size="md">
-							Draw again
-						</Button>
-					</View>
-					<Link href="/cards" asChild>
-						<Pressable className="flex-1 rounded-xl border border-border/40 px-4 py-2">
-							<Text className="text-center font-body text-sm font-semibold text-card-foreground">
-								All tarot cards
-							</Text>
-						</Pressable>
-					</Link>
-				</View>
-			</View>
-
-			<View className="mt-5 flex-row gap-3">
-				<Link href="/home" asChild>
-					<Pressable className="flex-1 rounded-xl border border-border/40 px-4 py-3">
-						<Text className="text-center font-body text-sm font-semibold text-foreground">
-							Browse zodiac cards
-						</Text>
-					</Pressable>
-				</Link>
-				<Link href="/profile" asChild>
-					<Pressable className="flex-1 rounded-xl border border-border/40 px-4 py-3">
-						<Text className="text-center font-body text-sm font-semibold text-foreground">
-							Edit profile
-						</Text>
-					</Pressable>
-				</Link>
-			</View>
-		</ScrollView>
-	);
+        {/* Quick actions */}
+        <View className="flex-row gap-4 justify-center mt-4">
+          <Link href="/tarot" asChild>
+            <Button variant="outline" onPress={function (): void {
+              throw new Error("Function not implemented.");
+            } }>Today's Tarot</Button>
+          </Link>
+          <Link href="/profile" asChild>
+            <Button variant="outline" onPress={function (): void {
+              throw new Error("Function not implemented.");
+            } }>Edit profile</Button>
+          </Link>
+        </View>
+      </View>
+    </ScrollView>
+  );
 }
