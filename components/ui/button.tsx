@@ -1,11 +1,12 @@
 import { ReactNode } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
+import { colors, spacing, radii, fontSizes } from "@/constants/theme";
 
 type ButtonVariant = "default" | "outline";
 
 interface ButtonProps {
 	children: ReactNode;
-	onPress: () => void;
+	onPress?: () => void;
 	variant?: ButtonVariant;
 	size?: "lg" | "md";
 	disabled?: boolean;
@@ -54,24 +55,26 @@ export function Button({
 
 const styles = StyleSheet.create({
 	base: {
-		borderRadius: 18,
+		borderRadius: radii.btn,
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	sizeLarge: {
-		paddingVertical: 14,
-		paddingHorizontal: 20,
+			paddingVertical: spacing.lg,
+			paddingHorizontal: spacing.xl,
 	},
 	sizeMedium: {
-		paddingVertical: 10,
-		paddingHorizontal: 16,
+			paddingVertical: spacing.md,
+			paddingHorizontal: spacing.lg,
 	},
 	default: {
-		backgroundColor: "#B87D56",
+		backgroundColor: colors.primary,
+		borderWidth: 0,
+		borderColor: "transparent",
 	},
 	outline: {
 		borderWidth: 1,
-		borderColor: "rgba(237, 232, 216, 0.32)",
+			borderColor: colors.borderLight,
 		backgroundColor: "transparent",
 	},
 	disabled: {
@@ -84,16 +87,16 @@ const styles = StyleSheet.create({
 		fontWeight: "600",
 	},
 	labelLarge: {
-		fontSize: 16,
+		fontSize: fontSizes.md,
 	},
 	labelMedium: {
-		fontSize: 14,
+		fontSize: fontSizes.sm2,
 	},
 	labelDefault: {
-		color: "#433A5C",
+		color: colors.primaryForeground,
 	},
 	labelOutline: {
-		color: "#EDE8D8",
+		color: colors.foreground,
 	},
 });
 

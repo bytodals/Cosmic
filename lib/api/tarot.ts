@@ -1,53 +1,41 @@
-import { TarotCard } from "../types";
+import { TarotCard, TarotResponse } from "../types";
 
-export function useAllTarotCards() {
-  const [cards, setCards] = useState<TarotCard[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const BASE_URL = 'https://freehoroscopeapi.com/api/v1';
 
-  useEffect(() => {
-    async function fetchAll() {
-      setLoading(true);
-      setError(null);
-      try {
-        // TODO: Replace with real fetch logic
-        // For now, return an empty array or mock data
-        setCards([]);
-      } catch (err) {
-        setError((err as Error).message || 'Failed to load tarot cards');
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchAll();
-  }, []);
+/**
+ * Fetch `count` random tarot cards from the public API.
+ * @param count number of cards to return (API param `n`)
+ * @param includeMinor include minor arcana in the draw (API param `minor`)
+ */
+export async function fetchRandomTarot(count = 1, includeMinor = false): Promise<TarotCard[]> {
+  const params = new URLSearchParams();
+  params.set('n', String(count));
+  if (includeMinor) params.set('minor', 'true');
 
-  return { cards, loading, error };
-}
-import { useState, useCallback, useEffect } from "react";
+  const url = `${BASE_URL}/tarot/cards/random?${params.toString()}`;
 
-export function useDailyTarot() {
-  const [card, setCard] = useState<TarotCard | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Tarot API error ${res.status}: ${res.statusText}`);
+  }
 
-  const fetchCard = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [drawnCard] = await fetchRandomTarot(1);
-      setCard(drawnCard);
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const json: TarotResponse = await res.json();
 
-  useEffect(() => { fetchCard(); }, [fetchCard]);
+  if (!json || !Array.isArray(json.cards)) {
+    throw new Error('Invalid response from tarot API');
+  }
 
-  return { card, loading, error, refetch: fetchCard };
+  return json.cards;
 }
 
-export function fetchRandomTarot(_arg0: number): [any] | PromiseLike<[any]> {
-  throw new Error("Function not implemented.");
+/**
+ * Fetch all tarot cards  
+*/
+export async function fetchAllTarotCards(): Promise<TarotCard[]> {
+  const url = `${BASE_URL}/tarot/cards`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Tarot API error ${res.status}`);
+  const json: TarotResponse = await res.json();
+  if (!json || !Array.isArray(json.cards)) throw new Error('Invalid tarot list response');
+  return json.cards;
 }

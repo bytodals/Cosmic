@@ -4,6 +4,7 @@ import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 import { Card } from "@/components/ui/Card";
 import { Button } from '@/components/ui/Button';
+import { colors } from '@/constants/theme';
 import { useDailyHoroscope } from "@/hooks/useDailyHoroscope";
 
 import {
@@ -105,7 +106,7 @@ export default function DailyScreen() {
   if (loadingProfile) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator size="large" color="#B87D56" />
+        <ActivityIndicator size="large" color={colors.primary} />
         <Text className="mt-4 text-text-muted">Loading your profile...</Text>
       </View>
     );
@@ -124,9 +125,7 @@ export default function DailyScreen() {
           Add your birth details to get personalized daily horoscopes and a full birth chart (Moon & Rising signs).
         </Text>
         <Link href="/profile" asChild>
-          <Button size="lg" onPress={function (): void {
-            throw new Error("Function not implemented.");
-          }}>Add birth details</Button>
+          <Button size="lg">Add birth details</Button>
         </Link>
       </View>
     );
@@ -195,14 +194,10 @@ export default function DailyScreen() {
         {/* Quick actions */}
         <View className="flex-row gap-4 justify-center mt-4">
           <Link href="/tarot" asChild>
-            <Button variant="outline" onPress={function (): void {
-              throw new Error("Function not implemented.");
-            } }>Today's Tarot</Button>
+            <Button variant="outline">Today's Tarot</Button>
           </Link>
           <Link href="/profile" asChild>
-            <Button variant="outline" onPress={function (): void {
-              throw new Error("Function not implemented.");
-            } }>Edit profile</Button>
+            <Button variant="outline">Edit profile</Button>
           </Link>
         </View>
       </View>

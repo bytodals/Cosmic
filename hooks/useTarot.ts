@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useAllTarotCards } from '@/lib/api/tarot';
-import { TarotCard } from '@/lib/types';
+import { useState, useEffect, useCallback } from "react";
+import { fetchAllTarotCards } from "@/lib/api/tarot";
+import { TarotCard } from "@/lib/types";
 
 export function useAllTarotCards() {
   const [cards, setCards] = useState<TarotCard[]>([]);
@@ -12,7 +12,7 @@ export function useAllTarotCards() {
     setError(null);
     try {
       const allCards = await fetchAllTarotCards();
-      // Sortera optional: major först, sen minor efter suit
+      // Sorting optional: major first,  minor after suit
       const sorted = allCards.sort((a, b) => {
         if (a.type === 'major' && b.type !== 'major') return -1;
         if (a.type !== 'major' && b.type === 'major') return 1;
@@ -20,7 +20,7 @@ export function useAllTarotCards() {
       });
       setCards(sorted);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Kunde inte ladda tarot-kort');
+      setError(err instanceof Error ? err.message : "Failed to load tarot cards");
     } finally {
       setLoading(false);
     }

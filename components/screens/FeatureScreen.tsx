@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
+import { colors, spacing, radii, fontSizes } from "../../constants/theme";
 
 type FeatureScreenProps = {
 	eyebrow?: string;
@@ -33,16 +34,16 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: "center",
-		paddingHorizontal: 24,
-		paddingVertical: 40,
+		paddingHorizontal: spacing.xl,
+		paddingVertical: spacing['3xl'],
 	},
 	card: {
-		borderRadius: 24,
-		backgroundColor: "rgba(27, 22, 40, 0.92)",
-		padding: 24,
+		borderRadius: radii.xl,
+		backgroundColor: colors.featureBackground,
+		padding: spacing.xl,
 		...Platform.select({
 			web: {
-				boxShadow: "0 8px 18px rgba(0, 0, 0, 0.16)",
+				boxShadow: `0 8px 18px rgba(0, 0, 0, 0.16)`,
 			},
 			default: {
 				shadowColor: "#000",
@@ -54,28 +55,28 @@ const styles = StyleSheet.create({
 		}),
 	},
 	eyebrow: {
-		marginBottom: 8,
-		color: "#BEAEFD",
-		fontSize: 13,
+		marginBottom: spacing.sm,
+		color: colors.starCore,
+		fontSize: fontSizes.sm,
 		fontWeight: "700",
 		letterSpacing: 1,
 		textTransform: "uppercase",
 	},
 	title: {
-		color: "#F8F4FF",
-		fontSize: 30,
+		color: "foreground",
+		fontSize: fontSizes['2xl'],
 		fontWeight: "700",
 	},
 	subtitle: {
-		marginTop: 8,
-		color: "#CBBFE3",
-		fontSize: 18,
+		marginTop: spacing.sm,
+		color: colors.nebulaMist,
+		fontSize: fontSizes.lg,
 		fontWeight: "600",
 	},
 	description: {
-		marginTop: 16,
-		color: "#E6DFF7",
-		fontSize: 16,
-		lineHeight: 24,
+		marginTop: spacing.lg,
+		color: colors.nebulaMist,
+		fontSize: fontSizes.md,
+		lineHeight: Math.round(fontSizes.md * 1.5),
 	},
 });

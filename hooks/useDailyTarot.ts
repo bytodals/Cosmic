@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { fetchRandomTarot } from '@/lib/api/tarot';
-import { TarotCard } from '@/lib/types';
+import { useState, useEffect, useCallback } from "react";
+import { fetchRandomTarot } from "@/lib/api/tarot";
+import { TarotCard } from "@/lib/types";
 
 export function useDailyTarot() {
   const [card, setCard] = useState<TarotCard | null>(null);

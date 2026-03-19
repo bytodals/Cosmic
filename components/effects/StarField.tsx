@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Animated, Easing, Platform, StyleSheet, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { colors, radii } from "@/constants/theme";
 
 type Star = {
 	id: number;
@@ -251,12 +252,7 @@ const StarField = () => {
 			importantForAccessibility="no-hide-descendants">
 			{/* Nebula One */}
 			<AnimatedGradient
-				colors={[
-					"rgba(0 0 0 / 0.85)",
-					"rgba(0 0 0 / 0.82)",
-					"rgba(0 0 0 / 0.6)",
-					"rgba(45 42 75 / 0.49)",
-				]}
+				colors={colors.nebulaOneGradient}
 				start={{ x: 0.1, y: 0.1 }}
 				end={{ x: 0.9, y: 0.9 }}
 				style={[
@@ -274,12 +270,7 @@ const StarField = () => {
 
 			{/* Nebula Two */}
 			<AnimatedGradient
-				colors={[
-					"rgb(20 1 29)",
-					"rgba(112 5 41 / 0.14)",
-					"rgba(100 13 49 / 0.28)",
-					"rgba(151 45 73 / 0.4)",
-				]}
+				colors={colors.nebulaTwoGradient}
 				start={{ x: 0.9, y: 0.2 }}
 				end={{ x: 0.2, y: 0.8 }}
 				style={[
@@ -299,7 +290,7 @@ const StarField = () => {
 			<AnimatedGradient
 				colors={[
 					"rgba(255,255,255,0)",
-					"rgba(179,145,245,0.08)",
+					colors.nebulaMist,
 					"rgba(255,255,255,0)",
 				]}
 				start={{ x: 0.5, y: 0 }}
@@ -395,13 +386,13 @@ const styles = StyleSheet.create({
 	},
 	starGlow: {
 		position: "absolute",
-		backgroundColor: "rgba(196, 170, 235, 0.7)",
+		backgroundColor: colors.starGlow,
 		...Platform.select({
 			web: {
-				boxShadow: "0 0 18px rgba(210, 188, 240, 0.85)",
+				boxShadow: `0 0 18px ${colors.starGlow}`,
 			},
 			default: {
-				shadowColor: "#d2bcf0",
+				shadowColor: colors.starGlowShadow,
 				shadowOffset: { width: 0, height: 0 },
 				shadowOpacity: 0.85,
 				shadowRadius: 18,
@@ -409,18 +400,18 @@ const styles = StyleSheet.create({
 		}),
 	},
 	starCore: {
-		backgroundColor: "rgba(244, 236, 255, 0.72)",
+		backgroundColor: colors.starCore,
 	},
 	nebula: {
 		position: "absolute",
-		borderRadius: 999,
+		borderRadius: radii.full,
 		opacity: 1,
 		...Platform.select({
 			web: {
-				boxShadow: "0 0 60px rgba(143, 122, 223, 0.6)",
+				boxShadow: `0 0 60px ${colors.starCoreShadow}`,
 			},
 			default: {
-				shadowColor: "#8f7adf",
+				shadowColor: colors.starCoreShadow,
 				shadowOffset: { width: 0, height: 0 },
 				shadowOpacity: 0.6,
 				shadowRadius: 60,

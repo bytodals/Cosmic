@@ -12,7 +12,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
 				/>
 				<ScrollViewStyleReset />
 			</head>
-			<body style={{ margin: 0, minHeight: "100%", backgroundColor: "#0A0A0C" }}>
+			<body style={{ margin: 0, minHeight: "100%" }}>
 				{children}
 			</body>
 		</html>

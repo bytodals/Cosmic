@@ -1,8 +1,7 @@
-// components/ui/Skeleton.tsx
-// Placeholder component shown while data is loading.
-// Gives better UX than just a spinner (VG polish).
+// placeholder while data is loading.
 
-import { View } from 'react-native';
+import { View } from "react-native";
+import { spacing } from "@/constants/theme";
 
 interface SkeletonProps {
   width?: number | string;
@@ -12,13 +11,20 @@ interface SkeletonProps {
 
 export function Skeleton({
   width = '100%',
-  height = 20,
+  height = spacing.lg,
   className = '',
 }: SkeletonProps) {
+  const getDimension = (value: number | string | undefined) => {
+    if (typeof value === 'number' || value === undefined) return value;
+    if (value === 'auto') return value;
+      //  percentage, fallback to undeined 
+    return undefined;
+  };
+
   return (
     <View
       className={`bg-muted/40 animate-pulse rounded-xl ${className}`}
-      style={{ width, height }}
+      style={{ width: getDimension(width), height: getDimension(height) }}
     />
   );
 }

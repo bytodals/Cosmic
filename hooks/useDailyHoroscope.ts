@@ -2,8 +2,8 @@
 // Custom hook that fetches, caches (24h), and handles errors for daily horoscope.
 // This is the core of VG-level code quality.
 
-import { useState, useEffect, useCallback } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState, useEffect, useCallback } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface DailyHoroscope {
   mood: any;

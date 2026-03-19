@@ -1,7 +1,5 @@
-// Keeps network logic separate from UI and hooks (clean architecture).
-
-// Example: Birth chart summary (moon + ascendant)
-// You can add more functions here later (e.g. weeklyHoroscope, compatibilityCheck)
+// keep network logic separate from UI and hooks 
+// Birth chart summary (moon + ascendant)
 
 const BASE_URL = 'https://freehoroscopeapi.com/api/v1'; // or your own backend
 
@@ -40,7 +38,7 @@ export async function fetchBirthChartSummary(details: {
     };
   } catch (error) {
     console.error('Failed to fetch birth chart:', error);
-    // Return fallback so the app doesn't crash
+    // return fallback 
     return {
       moonSign: 'Moon sign unavailable',
       ascendantSign: 'Ascendant unavailable',

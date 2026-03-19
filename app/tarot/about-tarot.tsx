@@ -1,16 +1,17 @@
-import { useState, useMemo } from 'react';
-import { View, Text, TextInput, FlatList, ActivityIndicator } from 'react-native';
+import { useState, useMemo } from "react";
+import { View, Text, TextInput, FlatList, ActivityIndicator, Pressable } from "react-native";
 
-import StarField from '@/components/effects/StarField';
-import { useDailyTarot } from '@/hooks/useDailyTarot'; 
-import { TarotCard } from '@/lib/types';
-import { Button } from '@/components/ui/Button';
+import StarField from "@/components/effects/StarField";
+import { useAllTarotCards } from "@/hooks/useTarot";
+import { spacing } from "@/constants/theme";
+import { colors } from "@/constants/theme";
+import { TarotCard } from "@/lib/types";
+import TarotDetailsModal from "@/components/modals/TarotDetailsModal";
+import { Button } from "@/components/ui/Button";
 
 export default function AboutTarot() {
-  const { card, loading, error } = useDailyTarot(); // fetch all 78 cards
+  const { cards: cardsArray, loading, error } = useAllTarotCards();
   const [searchQuery, setSearchQuery] = useState('');
-
-  const cardsArray = card ? (Array.isArray(card) ? card : [card]) : [];
 
   const filteredCards = useMemo(() => {
     if (!cardsArray) return [];
@@ -26,8 +27,11 @@ export default function AboutTarot() {
     );
   }, [cardsArray, searchQuery]);
 
-  const renderCardItem = ({ item }: { item: TarotCard }) => (
-    <View className="mb-4 rounded-xl border border-border bg-card p-5">
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalStartIndex, setModalStartIndex] = useState(0);
+
+  const renderCardItem = ({ item, index }: { item: TarotCard; index: number }) => (
+    <Pressable onPress={() => { setModalStartIndex(index); setModalVisible(true); }} className="mb-4 rounded-xl border border-border bg-card p-5">
       <Text className="text-xl font-display text-foreground">
         {item.name}
       </Text>
@@ -42,7 +46,7 @@ export default function AboutTarot() {
           Reversed: {item.meaning_rev.substring(0, 80)}...
         </Text>
       )}
-    </View>
+    </Pressable>
   );
 
   return (
@@ -66,25 +70,25 @@ export default function AboutTarot() {
             Explore all 78 cards in the Rider-Waite-Smith tradition. Search by name, meaning, or arcana type.
             </Text>
 
-          {/* Sökfält – VG: klient-side filtrering */}
+          {/* Search*/}
           <TextInput
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholder="Sök kort eller betydelse..."
-            placeholderTextColor="#8a82a0"
+            placeholder="Search cards or meaning..."
+            placeholderTextColor={colors.mutedForeground}
             className="mb-6 rounded-xl border border-border bg-muted px-4 py-3 text-foreground"
           />
 
           {loading ? (
             <View className="items-center py-10">
-              <ActivityIndicator size="large" color="#B87D56" />
-              <Text className="mt-4 text-text-muted">Laddar tarot-lektion...</Text>
+              <ActivityIndicator size="large" color={colors.primary} />
+              <Text className="mt-4 text-text-muted">Loading tarot cards...</Text>
             </View>
           ) : error ? (
             <View className="items-center py-10">
               <Text className="text-red-400 text-center">{error}</Text>
-              <Button style={{ marginTop: 16 }} onPress={() => {/* refetch */}}>
-                Försök igen
+              <Button style={{ marginTop: spacing.lg }} onPress={() => {/* refetch */}}>
+                Try again
               </Button>
             </View>
           ) : filteredCards.length === 0 ? (
@@ -97,9 +101,10 @@ export default function AboutTarot() {
               renderItem={renderCardItem}
               keyExtractor={(item: { name_short: any; name: any; }) => item.name_short || item.name}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 40 }}
+              contentContainerStyle={{ paddingBottom: spacing['3xl'] }}
             />
           )}
+          <TarotDetailsModal visible={modalVisible} cards={filteredCards} startIndex={modalStartIndex} onClose={() => setModalVisible(false)} />
         </View>
       </View>
     </View>

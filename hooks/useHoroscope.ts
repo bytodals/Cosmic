@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { HoroscopeResponse } from '../lib/types';
-import { ZodiacId } from '@/data/Zodiacs';
+import { useState, useEffect, useCallback } from "react";
+import { HoroscopeResponse } from "../lib/types";
+import { ZodiacId } from "@/data/Zodiacs";
 
 
 type Period = 'daily' | 'weekly' | 'monthly';

@@ -1,8 +1,5 @@
-// components/ui/Card.tsx
-// Reusable card with optional glassmorphism effect.
-// Keeps all cards looking consistent across the app (DRY).
-
-import { View, ViewProps } from 'react-native';
+// Reusable card 
+import { View, ViewProps } from "react-native";
 
 interface CardProps extends ViewProps {
   glass?: boolean;

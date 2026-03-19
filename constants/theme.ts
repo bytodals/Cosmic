@@ -1,19 +1,30 @@
-// Central place for ALL design tokens.
-// Makes it easy to change colors or spacing everywhere without hunting through files.
-
 export const colors = {
+  // basic runtime tokens
   background: '#0A0A0C',
   foreground: '#ede8d8',
-  card: '#231e30',
-  cardGlass: 'rgba(35, 30, 48, 0.35)',     // semi-transparent for glass effect
-  primary: '#B87D56',
-  secondary: '#2e2840',
-  muted: '#18171D',
-  border: 'rgba(91, 70, 167, 0.4)',
-  text: '#ede8d8',
-  textMuted: '#B9AFD4',
-  error: '#ef4444',
-  glow: 'rgba(184, 125, 86, 0.15)',
+  primary: '#56B8B8',
+  primaryForeground: '#433A5C',
+  mutedForeground: '#8a82a0',
+  borderLight: 'rgba(237, 232, 216, 0.32)',
+  featureBackground: 'rgba(27, 22, 40, 0.92)',
+  // Starfield / accent tones 
+  starGlow: 'rgba(196, 170, 235, 0.7)',
+  starGlowShadow: '#d2bcf0',
+  starCore: 'rgba(244, 236, 255, 0.72)',
+  starCoreShadow: '#8f7adf',
+  nebulaMist: 'rgba(179,145,245,0.08)',
+  nebulaOneGradient: [
+    'rgba(0,0,0,0.21)',
+    'rgba(0,0,0,0.22)',
+    'rgba(0,0,0,0.16)',
+    'rgba(45,42,75,0.39)'
+  ] as const,
+  nebulaTwoGradient: [
+    'rgba(112,5,41,0.14)',
+    'rgba(112,5,41,0.14)',
+    'rgba(100,13,49,0.128)',
+    'rgba(151,45,73,0.14)'
+  ] as const,
 } as const;
 
 export const spacing = {
@@ -23,4 +34,33 @@ export const spacing = {
   lg: 16,
   xl: 24,
   '2xl': 32,
+  '3xl': 40,
+} as const;
+
+
+export const radii = {
+  sm: 6,
+  md: 10,
+  lg: 16,
+  xl: 24,
+  btn: 18,
+  full: 9999,
+} as const;
+
+export const fontSizes = {
+  xs: 12,
+  sm: 13,
+  sm2: 14,
+  md: 16,
+  lg: 18,
+  xl: 24,
+  '2xl': 30,
+  '3xl': 36,
+} as const;
+
+export const theme = {
+  colors,
+  spacing,
+  radii,
+  fontSizes,
 } as const;

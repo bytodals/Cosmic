@@ -1,8 +1,7 @@
-// components/ui/FormInput.tsx
-// Reusable input field that follows our design system.
-// Removes duplicate code from the birth modal (DRY).
+// Reusable input field
 
-import { Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View } from "react-native";
+import { colors } from "@/constants/theme";
 
 interface FormInputProps {
   label: string;
@@ -30,10 +29,10 @@ export function FormInput({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor="#8a82a0"
+        placeholderTextColor={colors.mutedForeground}
         className="rounded-2xl border border-border bg-background px-4 py-3.5 text-text"
       />
-      {helperText && <Text className="mt-1 text-xs text-textMuted">{helperText}</Text>}
+      {helperText && <Text className="mt-1 text-xs text-text-muted">{helperText}</Text>}
     </View>
   );
 }

@@ -1,5 +1,5 @@
-import { HoroscopeResponse } from '@/lib/types';
-import { ZodiacId } from '@/lib/types';
+import { HoroscopeResponse } from "@/lib/types";
+import { ZodiacId } from "@/lib/types";
 
 /**
  * Base URL for the API

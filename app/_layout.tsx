@@ -1,8 +1,9 @@
 import "../globals.css";
 import { useEffect } from "react";
-import { Stack } from "expo-router";
-import { Platform, View } from "react-native";
+import { Stack, useRouter, useSegments } from "expo-router";
+import { Platform, View, Pressable, Text, StyleSheet } from "react-native";
 import StarField from "@/components/effects/StarField";
+import { colors } from "@/constants/theme";
 
 export default function RootLayout() {
 	useEffect(() => {
@@ -31,11 +32,12 @@ export default function RootLayout() {
 	}, []);
 
 	return (
-		<View className="flex-1 bg-background" style={{ backgroundColor: "#0A0A0C" }}>
+		<View className="flex-1 bg-background">
 			<StarField />
 
-			<View className="z-10 flex-1">
-        <Stack
+			<View className="z-10 flex-1" style={{ paddingTop: 10 }}>
+				<AppHeader />
+				<Stack
           screenOptions={{
             headerShown: false,
 				contentStyle: { backgroundColor: "transparent" },
@@ -51,3 +53,37 @@ export default function RootLayout() {
 		</View>
 	);
 }
+
+function AppHeader() {
+	const router = useRouter();
+	const segments = useSegments();
+
+	// Hide on index (root) — only show when there are nested segments
+	if (!segments || (segments.length as number) === 0) return null;
+
+	return (
+		<Pressable
+			onPress={() => router.back()}
+			style={styles.backButton}
+			accessibilityLabel="Back"
+		>
+			<Text style={styles.backText}>{"<"}</Text>
+		</Pressable>
+	);
+}
+
+const styles = StyleSheet.create({
+	backButton: {
+		position: "absolute",
+		top: Platform.OS === "ios" ? 44 : 14,
+		left: 12,
+		zIndex: 1000,
+		padding: 8,
+		borderRadius: 8,
+	},
+	backText: {
+		color: colors.foreground,
+		fontSize: 20,
+		fontWeight: "600",
+	},
+});
