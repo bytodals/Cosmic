@@ -19,27 +19,17 @@ Fetches real-time daily horoscopes and tarot cards from the public [freehoroscop
 
 
 - Zodiac detail screen
-  
   <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/0d508a42-8b16-4c93-8a92-6920886d0490" />
-
-
 - Birth detail modal
-  
   <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/96dff25d-9059-4995-9ca3-fcd9f7bb067f" />
-
-
+  
 - Daily Horoscope
-  
   <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/5c226a8e-f247-4ad2-bb9e-a7b1cfc54773" />
-
-
 - Todays Tarot
-  
   <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/f4c8233b-f940-46d4-8aeb-89ee4c047cc5" />
 
   
 - Tarot card meanings with search/filter
-  
   <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/42f28478-1036-44b5-9265-0ef3263c5e1d" />
 
   
