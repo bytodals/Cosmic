@@ -22,7 +22,6 @@ export function Button({
 	style,
 }: ButtonProps) {
 	const isOutline = variant === "outline";
-	// On native (iOS/Android) we prefer filled buttons for better contrast.
 	const shouldShowOutline = isOutline && Platform.OS === 'web';
 	const label =
 		typeof children === "string" || typeof children === "number" ? (

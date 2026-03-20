@@ -23,12 +23,12 @@ export async function fetchDailyHoroscope(sign: ZodiacId): Promise<HoroscopeResp
 
     const jsonRaw: any = await response.json();
 
-    // If API returns { data: { ... } }
+    // If API returns the expected shape with data wrapper
     if (jsonRaw && jsonRaw.data && jsonRaw.data.horoscope && jsonRaw.data.sign) {
       return jsonRaw.data as HoroscopeResponse['data'];
     }
 
-    // Some deployments return top-level fields (horoscope/sign/date)
+    // Some deployments return fields, horoscope/sign/date
     if (jsonRaw && (jsonRaw.horoscope || jsonRaw.sign)) {
       return {
         date: jsonRaw.date || new Date().toISOString().split('T')[0],
@@ -45,9 +45,6 @@ export async function fetchDailyHoroscope(sign: ZodiacId): Promise<HoroscopeResp
   }
 }
 
-/**
- * Optional: fetch weekly or monthly (for extra functionality / toggle)
- */
 export async function fetchPeriodHoroscope(
   sign: ZodiacId,
   period: 'weekly' | 'monthly'

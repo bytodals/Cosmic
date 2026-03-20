@@ -1,4 +1,4 @@
-// today's horoscope + birth chart info.
+// todays horoscope + birth chart info.
 
 import { useLocalSearchParams } from "expo-router";
 import { ScrollView, ActivityIndicator, Text, View } from "react-native";

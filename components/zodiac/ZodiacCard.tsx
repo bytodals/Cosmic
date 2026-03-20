@@ -44,7 +44,7 @@ export default function ZodiacCard({ sign, size = "md", onPress }: ZodiacCardPro
     </View>
   );
 
-  // If custom onPress is passed → use it
+  // if onPress is passed its used
   if (onPress) {
     return (
       <Pressable onPress={onPress} className="active:opacity-75">
@@ -53,7 +53,7 @@ export default function ZodiacCard({ sign, size = "md", onPress }: ZodiacCardPro
     );
   }
 
-  // Default → navigate to zodiac details page
+  // Default, navigate to zodiac details page
   return (
     <Link href={`/zodiac/${sign.id}`} asChild>
       <Pressable className="active:opacity-75">

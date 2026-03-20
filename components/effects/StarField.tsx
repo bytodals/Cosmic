@@ -239,7 +239,7 @@ const StarField = () => {
 		nebulaTwoMotion.start();
 		runningAnimations.push(nebulaOneMotion, nebulaTwoMotion);
 
-		// Cleanup when component unmounts
+		// Cleanup on unmount
 		return () => {
 			runningAnimations.forEach((animation) => animation.stop());
 		};
