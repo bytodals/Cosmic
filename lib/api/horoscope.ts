@@ -1,15 +1,13 @@
 import { HoroscopeResponse } from "@/lib/types";
 import { ZodiacId } from "@/lib/types";
 
-/**
- * Base URL for the API
- */
+// Base URL for the API 
 const BASE_URL = 'https://freehoroscopeapi.com/api/v1';
 
-/**
- * Fetch today's horoscope for a given zodiac sign
- * Accepts both API shapes: { data: {...} } and { horoscope, sign, date }
- */
+
+ //Fetch today's horoscope for a given zodiac sign
+ // Accepts both API shapes: { data: {...} } and { horoscope, sign, date }
+
 export async function fetchDailyHoroscope(sign: ZodiacId): Promise<HoroscopeResponse['data']> {
   const s = String(sign || '').toLowerCase();
   try {
