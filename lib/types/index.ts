@@ -1,10 +1,9 @@
-// ───────────────────────────────────────────────
 // Zodiac-related types (static + validation)
-// ───────────────────────────────────────────────
 
-/**
- * all valid zodiac sign IDs - matches API expectation: lowercase
- */
+
+
+ // all valid zodiac sign IDs - matches API expectation: lowercase
+
 export type ZodiacId =
   | 'aries'
   | 'taurus'
@@ -21,9 +20,9 @@ export type ZodiacId =
 
 export type ZodiacElement = 'Fire' | 'Earth' | 'Air' | 'Water';
 
-/**
- * static sign info (UI list, icons, colors, dates)
- */
+
+ // static sign info (UI list, icons, colors, dates)
+
 export interface ZodiacSign {
   slug: ZodiacId;
   name: string;          
@@ -32,9 +31,9 @@ export interface ZodiacSign {
   symbol: string;
   }
 
-/**
- * type guard – for dynamic routes & safety
- */
+
+ // type guard – for dynamic routes & safety
+
 export function isZodiacId(value: string): value is ZodiacId {
   const valid = [
     'aries','taurus','gemini','cancer','leo','virgo',
@@ -43,9 +42,9 @@ export function isZodiacId(value: string): value is ZodiacId {
   return valid.includes(value.toLowerCase() as any);
 }
 
-// ───────────────────────────────────────────────
+
 // API response types (from freehoroscopeapi.com)
-// ───────────────────────────────────────────────
+
 
 export interface HoroscopeResponse {
   data: {
@@ -73,22 +72,18 @@ export interface TarotResponse {
   cards: TarotCard[];
 }
 
-// ───────────────────────────────────────────────
-// App-specific / derived types
-// ───────────────────────────────────────────────
 
-/**
- * For tarot info screen or daily draw
- */
+// App-specific / derived types
+// For tarot info screen or daily draw
+
 export interface TarotInsight {
   card: TarotCard;
   position?: 'upright' | 'reversed'; 
   personalInsight?: string;          
 }
 
-/**
- * future birth chart feature 
- */
+//future birth chart feature 
+
 export interface BirthChartSummary {
   sunSign: ZodiacId;
   moonSign?: ZodiacId;
