@@ -110,6 +110,7 @@ All responses are typed with interfaces in `types/index.ts`.
 
 ## Project status & next steps
 
+
 - Current status: the app is functional and demonstrates core flows (horoscopes, tarot lookup, local personalization via birth details modal), but the project is not "finished" yet.
 - Planned/coming features:
 	- Full birth-chart integration and improved birth-chart-based personalization (currently the app uses a local sample JSON and the external birth-chart API is disabled by default). To enable the external birth-chart, set `ENABLE_BIRTH_API` = `true` in `lib/api/index.ts` and provide API access.
@@ -120,6 +121,13 @@ All responses are typed with interfaces in `types/index.ts`.
 
 - Implementation notes:
 	- Tarot draws are cached per-day (24h) so users see the same daily card across screens; use the `refetch()` returned by `useDailyTarot` to force a refresh during development.
+	- To manually clear the tarot cache during development, remove today's AsyncStorage key `cosmic_tarot_YYYY-MM-DD` (replace YYYY-MM-DD with today's date) or run this in a debug console:
+
+```js
+// Example (debug):
+await AsyncStorage.removeItem('cosmic_tarot_' + new Date().toISOString().slice(0,10));
+```
+	  Alternatively, clear AsyncStorage via Expo DevTools or restart the app's storage during development.
 	- Horoscopes are cached per-sign for 24h in `useDailyHoroscope`.
 
 I plan to continue developing these features; happy to prioritize which to add next based on feedback.
@@ -129,7 +137,8 @@ I plan to continue developing these features; happy to prioritize which to add n
 - Weekly/monthly horoscope tabs
 - Save favorite tarot cards
 - Share daily insight as image
-- Moon/rising sign calculation (if API expands)
+- UX/UI optimization
+- Moon/rising sign calculation
 
 ---
 
