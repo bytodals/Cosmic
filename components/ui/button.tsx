@@ -78,8 +78,7 @@ const styles = StyleSheet.create({
 	},
 	default: {
 		backgroundColor: colors.primary,
-		// filled buttons don't need a visible border (it blended with the
-		// primary background). Keep background only for contrast on dark UI.
+		
 	},
 	outline: {
 		borderWidth: 1,

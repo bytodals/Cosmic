@@ -144,7 +144,7 @@ const StarField = () => {
 			runningAnimations.push(driftX, driftY, twinkle, scalePulse);
 		});
 
-		// === NEBULA ANIMATIONS (the part you asked for) ===
+		
 		const nebulaOneMotion = Animated.loop(
 			Animated.sequence([
 				Animated.parallel([
