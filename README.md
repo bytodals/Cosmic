@@ -4,7 +4,7 @@ A mystical mobile app built with **React Native**, **Expo**, **TypeScript**, and
 Fetches real-time daily horoscopes and tarot cards from the public [freehoroscopeapi.com](https://freehoroscopeapi.com) API.
 
 **App name:** Cosmic  
-**Target platforms:** iOS (tested via Expo Go) & web (localhost development)  
+**Target platforms:** iOS (tested via Expo Go)
 **Course:** App development  
 **Goal:** Clean code, strong TypeScript usage, custom hooks, robust error handling, dynamic routing, client-side filtering, DRY principles
 
