@@ -247,7 +247,8 @@ const StarField = () => {
 
 	return (
 		<View
-			style={[styles.container, styles.noPointerEvents]}
+			style={styles.container}
+			pointerEvents="none"
 			accessibilityElementsHidden
 			importantForAccessibility="no-hide-descendants">
 			{/* Nebula One */}
@@ -298,7 +299,7 @@ const StarField = () => {
 				style={styles.nebulaMist}
 			/>
 
-			{/* Stars with twinkle and drift */}
+			{/* Stars with animation */}
 			{starsByLayer.map((layerStars, layerIndex) => {
 				const layer = layerAnimations[layerIndex];
 				const layerOpacity = layer.twinkle.interpolate({
@@ -386,13 +387,13 @@ const styles = StyleSheet.create({
 	},
 	starGlow: {
 		position: "absolute",
-		backgroundColor: colors.starGlow,
+		backgroundColor: colors.primary,
 		...Platform.select({
 			web: {
-				boxShadow: `0 0 18px ${colors.starGlow}`,
+				boxShadow: `0 0 18px ${colors.primary}`,
 			},
 			default: {
-				shadowColor: colors.starGlowShadow,
+				shadowColor: colors.primary,
 				shadowOffset: { width: 0, height: 0 },
 				shadowOpacity: 0.85,
 				shadowRadius: 18,

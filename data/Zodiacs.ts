@@ -1,7 +1,5 @@
 /**
  * Static zodiac sign data used for UI rendering, navigation, and validation.
- * This data is universal and does not change, so it's safe to keep locally.
- * IDs match exactly what the freehoroscopeapi.com expects (lowercase English).
  */
   
 export const zodiacSigns = [
@@ -41,7 +39,7 @@ export const zodiacById: Record<ZodiacId, ZodiacSign> =
  * Used in ZodiacCard component
  */
 export const elementColors: Record<ZodiacSign['element'], string> = {
-  // Use color hex values (applied as inline styles) to avoid depending on Tailwind's color palette
+  // hex values to avoid depending on Tailwind's color palette
   fire: '#F97316',      // orange-500
   earth: '#16A34A',     // emerald-600
   air: '#06B6D4',       // cyan-500

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchDailyHoroscope } from "@/lib/api/horoscope";
-import type { HoroscopeResponse } from "@/lib/types";
+import { zodiacById } from "@/data/Zodiacs";
 
 export interface DailyHoroscope {
   mood: any;
@@ -40,8 +40,9 @@ export function useDailyHoroscope(sign: string) {
         const parsed = JSON.parse(cached);
         // Respect cache TTL but ignore cached entries lacking a usable horoscope text
         if (Date.now() - parsed.timestamp < CACHE_HOURS * 60 * 60 * 1000) {
-          const cachedHoroscope = parsed.data?.horoscope;
-          if (cachedHoroscope && String(cachedHoroscope).trim().length > 0) {
+          const cachedHoroscope = String(parsed.data?.horoscope || '').trim();
+          // ignore empty or placeholder values saved in older runs
+          if (cachedHoroscope && !/no horoscope available/i.test(cachedHoroscope)) {
             setData(parsed.data);
             setLoading(false);
             return;
@@ -57,17 +58,35 @@ export function useDailyHoroscope(sign: string) {
         date: json.date || new Date().toISOString().split('T')[0],
         period: json.period,
         sign: json.sign,
-        horoscope: (json.horoscope || 'No horoscope available today.').toString(),
-        mood: undefined
+        horoscope: (json.horoscope || '').toString(),
+        mood: undefined,
       };
+
+      // If API returned an empty/placeholder horoscope, fall back to the
+      // local static zodiac description so the user sees something useful.
+      const raw = String(freshData.horoscope || '').trim();
+      if (!raw || /no horoscope available/i.test(raw)) {
+        const key = String(sign || '').toLowerCase();
+        const local = (zodiacById as any)[key];
+        if (local && local.description) {
+          freshData.horoscope = local.description;
+        } else {
+          freshData.horoscope = 'No horoscope available today.';
+        }
+      }
 
       setData(freshData);
 
-      // Save to cache
-      await AsyncStorage.setItem(cacheKey, JSON.stringify({
-        timestamp: Date.now(),
-        data: freshData,
-      }));
+      // Save to cache only when we have a non-empty, non-placeholder horoscope
+      const shouldCache = String(freshData.horoscope || '').trim().length > 0 &&
+        !/no horoscope available/i.test(String(freshData.horoscope));
+
+      if (shouldCache) {
+        await AsyncStorage.setItem(cacheKey, JSON.stringify({
+          timestamp: Date.now(),
+          data: freshData,
+        }));
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load horoscope');
     } finally {

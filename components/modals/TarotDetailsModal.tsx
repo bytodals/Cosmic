@@ -29,12 +29,17 @@ export default function TarotDetailsModal({ visible, cards, startIndex = 0, onCl
           className="flex-1 items-center justify-center px-5"
           style={
             (Platform.OS === 'web'
-              ? ({ backgroundColor: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' } as any)
-              : { backgroundColor: 'rgba(0,0,0,0.45)' })
+              ? ({ backgroundColor: 'rgba(0 0 0 / 0.83)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' } as any)
+              : { backgroundColor: 'rgba(0 0 0 / 0.93)' })
           }
         >
           <TouchableWithoutFeedback onPress={() => {}}>
             <View className="w-full max-w-md">
+              {/* Top-right close button */}
+              <View style={{ position: 'absolute', top: 8, right: 8, zIndex: 40 }}>
+                <Button variant="outline" onPress={onClose} style={{ paddingVertical: 6, paddingHorizontal: 8 }}>✖</Button>
+              </View>
+
               <Card>
                 <View>
                   <Text className="text-2xl font-display text-foreground mb-2">{card?.name}</Text>
@@ -48,16 +53,12 @@ export default function TarotDetailsModal({ visible, cards, startIndex = 0, onCl
                   </View>
                 </View>
 
-                <View className="mt-6 flex-row gap-3">
-                  <Button variant="outline" onPress={onClose} style={{ flex: 1 }}>Close</Button>
-                  <Button onPress={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} style={{ flex: 1 }}>Prev</Button>
-                  <Button onPress={() => setIndex((i) => Math.min(cards.length - 1, i + 1))} disabled={index >= cards.length - 1} style={{ flex: 1 }}>Next</Button>
+                <View className="mt-6 flex-row gap-5 justify-center">
+                  <Button size="xl" onPress={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0} style={{ flex: 1 }}>◀</Button>
+                  <Button size="xl" onPress={() => setIndex((i) => Math.min(cards.length - 1, i + 1))} disabled={index >= cards.length - 1} style={{ flex: 1 }}>▶</Button>
                 </View>
               </Card>
-
-              <View className="mt-4">
-                <Button variant="outline" onPress={onClose}>Back</Button>
-              </View>
+            
             </View>
           </TouchableWithoutFeedback>
         </View>

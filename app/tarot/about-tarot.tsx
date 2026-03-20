@@ -55,7 +55,7 @@ export default function AboutTarot() {
 
       <View className="flex-1">
         <View className="px-5 py-6">
-            <Text className="text-3xl font-display text-foreground mb-2">
+            <Text className="text-3xl font-display text-foreground mt-10 mb-2">
             Tarot – The Wisdom of the Cards
             {" "}
             <Text className="text-lg text-text-muted font-normal">
@@ -108,5 +108,7 @@ export default function AboutTarot() {
         </View>
       </View>
     </View>
+
+    
   );
 }

@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, ScrollView } from "react-native";
+import { View, Text, ActivityIndicator, ScrollView, Dimensions } from "react-native";
 import StarField from "@/components/effects/StarField";
 import { useDailyTarot } from "@/hooks/useDailyTarot";
 import { Card } from "@/components/ui/Card";
@@ -8,16 +8,16 @@ import { colors } from "@/constants/theme";
 
 export default function TarotScreen() {
   const { card, loading, error } = useDailyTarot();
+  const windowWidth = Dimensions.get("window").width;
+  const glyphSize = Math.round(windowWidth * 0.6);
 
   return (
     <View className="flex-1 bg-background">
       <StarField />
-      <ScrollView className="flex-1 px-5 py-6">
-        <Text className="text-3xl font-display text-foreground mb-4">Tarot</Text>
+      <ScrollView className="flex-1 mt-6 px-6 py-6">
+        <Text className="text-3xl font-display text-primary mt-10 mb-4">Today's Card</Text>
 
         <Card className="mb-6">
-          <Text className="text-xl font-display text-foreground mb-3">Today's Card</Text>
-
           {loading ? (
             <View className="items-center py-6">
               <ActivityIndicator size="large" color={colors.primary} />
@@ -27,18 +27,38 @@ export default function TarotScreen() {
           ) : card ? (
             <>
               <Text className="text-lg font-medium text-foreground">{card.name}</Text>
-              <Text className="mt-2 text-text-muted">{card.meaning_up.substring(0, 220)}...</Text>
+              <Text className="mt-2 text-text-muted">{card.meaning_up}</Text>
             </>
           ) : (
             <Text className="text-text-muted">No tarot card available today.</Text>
           )}
 
-          <View className="mt-4">
+          </Card>
+
+      
+
+          <View className="mt-4 items-center">
             <Link href="/tarot/about-tarot" asChild>
-              <Button size="md">Explore all cards</Button>
+              <Button size="md">See all cards</Button>
             </Link>
           </View>
-        </Card>
+
+            {/*image under the card box */}
+          <View className="items-center mb-1">
+            <Text
+              style={{
+                color: colors.primary,
+                textShadowColor: colors.primaryGlow,
+                textShadowOffset: { width: 0, height: 0 },
+                textShadowRadius: 18,
+                fontSize: glyphSize,
+                lineHeight: glyphSize,
+                opacity: 0.9,
+              }}
+            >
+              {"🀙"}
+            </Text>
+          </View>
       </ScrollView>
     </View>
   );

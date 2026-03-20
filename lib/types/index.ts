@@ -3,7 +3,7 @@
 // ───────────────────────────────────────────────
 
 /**
- * Literal union of all valid zodiac sign IDs (exactly matches API expectation: lowercase)
+ * all valid zodiac sign IDs - matches API expectation: lowercase
  */
 export type ZodiacId =
   | 'aries'
@@ -22,7 +22,7 @@ export type ZodiacId =
 export type ZodiacElement = 'Fire' | 'Earth' | 'Air' | 'Water';
 
 /**
- * static sign info (used for UI list, icons, colors, dates)
+ * static sign info (UI list, icons, colors, dates)
  */
 export interface ZodiacSign {
   slug: ZodiacId;
@@ -33,7 +33,7 @@ export interface ZodiacSign {
   }
 
 /**
- * Type guard – very useful for dynamic routes & safety
+ * type guard – for dynamic routes & safety
  */
 export function isZodiacId(value: string): value is ZodiacId {
   const valid = [
@@ -52,14 +52,14 @@ export interface HoroscopeResponse {
     date: string;           // "2026-03-19"
     period: 'daily' | 'weekly' | 'monthly';
     sign: string;           // Capitalized: "Aries"
-    horoscope: string;      // The text content
+    horoscope: string;      // text
   };
 }
 
 export interface TarotCard {
   type: 'major' | 'minor';
   name: string;
-  name_short: string;     // e.g. "ar01", "w01"
+  name_short: string;     // tex "ar01", "w01"
   value?: string;
   value_int?: number;
   meaning_up: string;
@@ -74,7 +74,7 @@ export interface TarotResponse {
 }
 
 // ───────────────────────────────────────────────
-// App-specific / derived types (extra functionality)
+// App-specific / derived types
 // ───────────────────────────────────────────────
 
 /**
@@ -82,26 +82,16 @@ export interface TarotResponse {
  */
 export interface TarotInsight {
   card: TarotCard;
-  position?: 'upright' | 'reversed'; // optional – you can add logic
-  personalInsight?: string;          // generated or static
+  position?: 'upright' | 'reversed'; 
+  personalInsight?: string;          
 }
 
 /**
- * For future birth chart feature (if you expand)
+ * future birth chart feature 
  */
 export interface BirthChartSummary {
   sunSign: ZodiacId;
   moonSign?: ZodiacId;
   ascendant?: ZodiacId;
   summary?: string;
-}
-
-// Optional: if you want to add overviews later (static or from another source)
-export interface ZodiacOverview {
-  sign: ZodiacId;
-  strengths: string[];
-  challenges: string[];
-  compatibility: ZodiacId[]; // or string[]
-  luckyColor?: string;
-  luckyNumbers?: number[];
 }
