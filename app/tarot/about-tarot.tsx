@@ -93,7 +93,7 @@ export default function AboutTarot() {
             </View>
           ) : filteredCards.length === 0 ? (
             <Text className="text-center text-text-muted py-10">
-              Inga kort matchade din sökning "{searchQuery}"
+            No Cards matched your search "{searchQuery}"
             </Text>
           ) : (
             <FlatList
