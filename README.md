@@ -13,34 +13,34 @@ Fetches real-time daily horoscopes and tarot cards from the public [freehoroscop
 
 - Home screen
   
-  <img width="384" height="760" alt="image" src="https://github.com/user-attachments/assets/82004168-9442-4c70-bcca-e7b06cbf90f1" />
+  <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/82004168-9442-4c70-bcca-e7b06cbf90f1" />
   
-  <img width="378" height="747" alt="image" src="https://github.com/user-attachments/assets/2e190c73-0f45-4f97-b32b-41a5b857b6ac" />
+  <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/2e190c73-0f45-4f97-b32b-41a5b857b6ac" />
 
 
 - Zodiac detail screen
   
-  <img width="379" height="767" alt="image" src="https://github.com/user-attachments/assets/0d508a42-8b16-4c93-8a92-6920886d0490" />
+  <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/0d508a42-8b16-4c93-8a92-6920886d0490" />
 
 
 - Birth detail modal
   
-  <img width="370" height="700" alt="image" src="https://github.com/user-attachments/assets/96dff25d-9059-4995-9ca3-fcd9f7bb067f" />
+  <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/96dff25d-9059-4995-9ca3-fcd9f7bb067f" />
 
 
 - Daily Horoscope
   
-  <img width="363" height="704" alt="image" src="https://github.com/user-attachments/assets/5c226a8e-f247-4ad2-bb9e-a7b1cfc54773" />
+  <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/5c226a8e-f247-4ad2-bb9e-a7b1cfc54773" />
 
 
 - Todays Tarot
   
-  <img width="378" height="724" alt="image" src="https://github.com/user-attachments/assets/f4c8233b-f940-46d4-8aeb-89ee4c047cc5" />
+  <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/f4c8233b-f940-46d4-8aeb-89ee4c047cc5" />
 
   
 - Tarot card meanings with search/filter
   
-  <img width="378" height="756" alt="image" src="https://github.com/user-attachments/assets/42f28478-1036-44b5-9265-0ef3263c5e1d" />
+  <img width="150" height="500" alt="image" src="https://github.com/user-attachments/assets/42f28478-1036-44b5-9265-0ef3263c5e1d" />
 
   
 
