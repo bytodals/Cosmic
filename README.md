@@ -108,7 +108,28 @@ Endpoints:
 
 All responses are typed with interfaces in `types/index.ts`.
 
+## Project status & next steps
 
+- Current status: the app is functional and demonstrates core flows (horoscopes, tarot lookup, local personalization via birth details modal), but the project is not "finished" yet.
+- Planned/coming features:
+	- Full birth-chart integration and improved birth-chart-based personalization (currently the app uses a local sample JSON and the external birth-chart API is disabled by default). To enable the external birth-chart, set `ENABLE_BIRTH_API` = `true` in `lib/api/index.ts` and provide API access.
+	- Push/local notifications (daily reminders or personalized triggers) — will add when personalization triggers are finalized.
+	- Complete profile / onboarding flow (there's a placeholder route `/profile` to implement).
+	- Persisted favorites, share/export of daily insights, and server-side personalization for better accuracy.
+	- Unit/integration tests for hooks and API helpers, and basic CI.
+
+- Implementation notes:
+	- Tarot draws are cached per-day (24h) so users see the same daily card across screens; use the `refetch()` returned by `useDailyTarot` to force a refresh during development.
+	- Horoscopes are cached per-sign for 24h in `useDailyHoroscope`.
+
+I plan to continue developing these features; happy to prioritize which to add next based on feedback.
+
+## Future Improvements
+
+- Weekly/monthly horoscope tabs
+- Save favorite tarot cards
+- Share daily insight as image
+- Moon/rising sign calculation (if API expands)
 
 ---
 
