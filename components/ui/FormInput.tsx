@@ -1,5 +1,3 @@
-// Reusable input field
-
 import { Text, TextInput, View } from "react-native";
 import { colors } from "@/constants/theme";
 

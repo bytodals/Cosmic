@@ -1,9 +1,13 @@
 export const colors = {
-  // basic runtime tokens
+  // basic 
   background: '#0A0A0C',
   foreground: '#ede8d8',
-  primary: '#56B8B8',
-  primaryForeground: '#433A5C',
+  primary: "#F7B4E8",
+  primaryForeground: '#6E6FAF',
+  // darker glow variant used shadows
+  primaryGlow: 'rgba(67,58,92,0.72)',
+  // secondary color used for zodiac emoji
+  secondary: '#858EC4',
   mutedForeground: '#8a82a0',
   borderLight: 'rgba(237, 232, 216, 0.32)',
   featureBackground: 'rgba(27, 22, 40, 0.92)',

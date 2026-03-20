@@ -1,47 +1,64 @@
-// card for each zodiac sign.
-
 import { Link } from "expo-router";
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, View } from "react-native";
+import { colors } from "@/constants/theme";
 import { type ZodiacSign, elementColors } from "../../data/Zodiacs";
 
 type ZodiacCardProps = {
   sign: ZodiacSign;
-  index: number;
+  size?: "sm" | "md";
   onPress?: () => void;
-  size?: 'sm' | 'md';
 };
 
-export default function ZodiacCard(props: ZodiacCardProps) {
-  const { sign, index, onPress, size } = props;
-  // If onPress is provided, render a Pressable that calls it; otherwise use link to navigate.
+export default function ZodiacCard({ sign, size = "md", onPress }: ZodiacCardProps) {
   const elementColor = elementColors[sign.element];
-  const cardSize = (sz: ZodiacCardProps['size']) => ({
-    padding: sz === 'sm' ? 'p-4' : 'p-5',
-    emoji: sz === 'sm' ? 'text-3xl mb-2' : 'text-4xl mb-3',
-    name: sz === 'sm' ? 'text-base' : 'text-lg',
-    dates: sz === 'sm' ? 'text-2xs' : 'text-xs',
-  });
 
-  const s = cardSize(size ?? 'md');
+  const styles = {
+    container: size === "sm" ? "p-4" : "p-5",
+    emoji: size === "sm" ? "text-3xl mb-2" : "text-4xl mb-3",
+    name: size === "sm" ? "text-base" : "text-lg",
+    dates: size === "sm" ? "text-2xs" : "text-xs",
+  };
 
-  const Inner = (
-    <Pressable
-      onPress={onPress}
-      className={`rounded-2xl border border-border bg-card/70 ${s.padding} active:opacity-95 items-center`}
-    >
-      <Text className={`${s.emoji}`}>{sign.emoji}</Text>
-      <Text className={`${s.name} font-display text-foreground`}>{sign.name}</Text>
-      <Text className={`${s.dates} text-text-muted mt-1`}>{sign.dates}</Text>
-      <Text className={`text-xs font-medium mt-2`} style={{ color: elementColor }}>{sign.element}</Text>
-      <Text className="sr-only">Zodiac card {index + 1}</Text>
-    </Pressable>
+  const content = (
+    <View className={`rounded-2xl border border-border bg-card/70 ${styles.container} items-center`}>
+      <Text
+        className={styles.emoji}
+        style={{
+          color: colors.secondary,
+          textShadowColor: colors.primaryGlow,
+          textShadowOffset: { width: 0, height: 0 },
+          textShadowRadius: 18,
+        }}
+      >
+        {sign.emoji}
+      </Text>
+      <Text className={`${styles.name} font-display text-foreground`}>
+        {sign.name}
+      </Text>
+      <Text className={`${styles.dates} text-text-muted mt-1`}>
+        {sign.dates}
+      </Text>
+      <Text className="text-xs font-medium mt-2" style={{ color: elementColor }}>
+        {sign.element}
+      </Text>
+    </View>
   );
 
-  if (onPress) return Inner;
+  // if onPress is passed its used
+  if (onPress) {
+    return (
+      <Pressable onPress={onPress} className="active:opacity-75">
+        {content}
+      </Pressable>
+    );
+  }
 
+  // Default, navigate to zodiac details page
   return (
-    <Link href={{ pathname: '/horoscope', params: { sign: sign.id } }} asChild>
-      {Inner}
+    <Link href={`/zodiac/${sign.id}`} asChild>
+      <Pressable className="active:opacity-75">
+        {content}
+      </Pressable>
     </Link>
   );
 }

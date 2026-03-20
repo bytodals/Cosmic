@@ -1,11 +1,15 @@
-// keep network logic separate from UI and hooks 
+//network logic separate from UI and hooks 
 // Birth chart summary (moon + ascendant)
 
-const BASE_URL = 'https://freehoroscopeapi.com/api/v1'; // or your own backend
+import sampleBirthChart from "@/data/sampleBirthChart.json";
+
+const BASE_URL = 'https://freehoroscopeapi.com/api/v1'; 
+
+// sample JSON so the UI can still render data
+export const ENABLE_BIRTH_API = false;
 
 /**
- * Fetches moon sign, ascendant and a short summary based on birth details.
- * Used in app/daily.tsx to personalize the chart.
+ * Fetches moon sign, ascendant and a short summary 
  */
 export async function fetchBirthChartSummary(details: {
   birthDate: string;
@@ -13,6 +17,16 @@ export async function fetchBirthChartSummary(details: {
   birthPlace: string;
   birthCountryCode?: string;
 }) {
+
+  if (!ENABLE_BIRTH_API) {
+    // Return example data from the local JSON file
+    return {
+      moonSign: (sampleBirthChart as any)?.moonSign ?? 'Moon sign unavailable',
+      ascendantSign: (sampleBirthChart as any)?.ascendantSign ?? 'Ascendant unavailable',
+      summary: (sampleBirthChart as any)?.summary ?? undefined,
+    };
+  }
+
   try {
     const response = await fetch(`${BASE_URL}/birth-chart`, {
       method: 'POST',
@@ -25,20 +39,32 @@ export async function fetchBirthChartSummary(details: {
       }),
     });
 
-    if (!response.ok) {
-      throw new Error(`Birth chart API error: ${response.status}`);
+    if (response.ok) {
+      const data = await response.json();
+      return {
+        moonSign: data.moonSign ?? 'Unknown',
+        ascendantSign: data.ascendantSign ?? 'Unknown',
+        summary: data.summary ?? undefined,
+      };
     }
 
-    const data = await response.json();
+    // attempt to surface logs 
+    let bodyText: string | null = null;
+    try {
+      bodyText = await response.text();
+    } catch (e) {
+      /* ignore */
+    }
+    console.warn(`Birth chart API returned ${response.status}${bodyText ? ` - ${bodyText}` : ''}`);
 
     return {
-      moonSign: data.moonSign || 'Unknown',
-      ascendantSign: data.ascendantSign || 'Unknown',
-      summary: data.summary || undefined,
+      moonSign: 'Moon sign unavailable',
+      ascendantSign: 'Ascendant unavailable',
+      summary: undefined,
     };
   } catch (error) {
     console.error('Failed to fetch birth chart:', error);
-    // return fallback 
+    // return  fallback 
     return {
       moonSign: 'Moon sign unavailable',
       ascendantSign: 'Ascendant unavailable',

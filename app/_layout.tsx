@@ -6,84 +6,89 @@ import StarField from "@/components/effects/StarField";
 import { colors } from "@/constants/theme";
 
 export default function RootLayout() {
-	useEffect(() => {
-		if (Platform.OS !== "web") {
-			return;
-		}
+  // only on web
+  useEffect(() => {
+    if (Platform.OS === "web") {
+      const head = document.head;
 
-		const head = globalThis.document?.head;
-		if (!head) {
-			return;
-		}
+      let favicon = head.querySelector(
+        'link[data-cosmic-favicon="true"]'
+      ) as HTMLLinkElement | null;
 
-		let favicon = head.querySelector<HTMLLinkElement>(
-			'link[data-cosmic-favicon="true"]',
-		);
+      if (!favicon) {
+        favicon = document.createElement("link");
+        favicon.rel = "icon";
+        favicon.type = "image/svg+xml";
+        favicon.setAttribute("data-cosmic-favicon", "true");
+        head.appendChild(favicon);
+      }
 
-		if (!favicon) {
-			favicon = globalThis.document.createElement("link");
-			favicon.rel = "icon";
-			favicon.type = "image/svg+xml";
-			favicon.setAttribute("data-cosmic-favicon", "true");
-			head.appendChild(favicon);
-		}
+      favicon.href = "/favicon.svg";
+    }
+  }, []);
 
-		favicon.href = "/favicon.svg";
-	}, []);
 
-	return (
-		<View className="flex-1 bg-background">
-			<StarField />
+  return (
+    <View className="flex-1 bg-background">
+      {/* Background */}
+      <StarField />
 
-			<View className="z-10 flex-1" style={{ paddingTop: 10 }}>
-				<AppHeader />
-				<Stack
+      {/* Header - absolute, sits above content */}
+      <AppHeader />
+
+      {/* Main content */}
+      {/* top margin so all pages/screens receive consistent spacing */}
+      <View className="z-10 flex-1" style={{ paddingTop: Platform.OS === "ios" ? 40 : 60 }}>
+
+        <Stack
           screenOptions={{
             headerShown: false,
-				contentStyle: { backgroundColor: "transparent" },
+            contentStyle: { backgroundColor: "transparent" },
           }}
-          initialRouteName="index">
+          initialRouteName="index"
+        >
           <Stack.Screen name="index" />
-					<Stack.Screen name="daily" />
-		        <Stack.Screen name="horoscope/[sign]" />
-	          <Stack.Screen name="tarot/about-tarot" />
-	      	  <Stack.Screen name="tarot/index" />
+          <Stack.Screen name="daily" />
+          <Stack.Screen name="horoscope/[sign]" />
+          <Stack.Screen name="tarot/about-tarot" />
+          <Stack.Screen name="tarot/index" />
         </Stack>
-			</View>
-		</View>
-	);
+      </View>
+    </View>
+  );
 }
 
+// Header with back button
 function AppHeader() {
-	const router = useRouter();
-	const segments = useSegments();
+  const router = useRouter();
+  const segments = useSegments();
 
-	// Hide on index (root) — only show when there are nested segments
-	if (!segments || (segments.length as number) === 0) return null;
+  // Hide on root screen (use existence of first segment to avoid narrow-literal length comparisons)
+  if (!segments?.[0]) return null;
 
-	return (
-		<Pressable
-			onPress={() => router.back()}
-			style={styles.backButton}
-			accessibilityLabel="Back"
-		>
-			<Text style={styles.backText}>{"<"}</Text>
-		</Pressable>
-	);
+  return (
+    <Pressable
+      onPress={() => router.back()}
+      style={styles.backButton}
+      accessibilityLabel="Back"
+    >
+      <Text style={styles.backText}>{"◂"}</Text>
+    </Pressable>
+  );
 }
 
 const styles = StyleSheet.create({
-	backButton: {
-		position: "absolute",
-		top: Platform.OS === "ios" ? 44 : 14,
-		left: 12,
-		zIndex: 1000,
-		padding: 8,
-		borderRadius: 8,
-	},
-	backText: {
-		color: colors.foreground,
-		fontSize: 20,
-		fontWeight: "600",
-	},
+  backButton: {
+    position: "absolute",
+    top: Platform.OS === "ios" ? 44 : 14,
+    left: 12,
+    zIndex: 1000,
+    padding: 12,
+    borderRadius: 12,
+  },
+  backText: {
+    color: colors.foreground,
+    fontSize: 28,
+    fontWeight: "700",
+  },
 });

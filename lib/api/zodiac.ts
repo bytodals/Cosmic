@@ -43,7 +43,7 @@ export async function fetchZodiacInfo(signId: string): Promise<ZodiacInfo> {
     name: local.name,
     dates: local.dates,
     element: local.element,
-    description: undefined,
+    description: local.description || undefined,
   };
 }
 
@@ -53,7 +53,7 @@ export async function generatePersonalizedHoroscope(signId: string, details?: {
   birthTime?: string;
   birthPlace?: string;
 }) {
-  // Try API endpoint for personalized horoscope (best-effort)
+  // try API endpoint for personal horoscope 
   try {
     const url = `${BASE_URL}/get-horoscope/personal`;
     const res = await fetch(url, {
@@ -73,7 +73,7 @@ export async function generatePersonalizedHoroscope(signId: string, details?: {
     console.warn('Personalized horoscope API failed, falling back', err);
   }
 
-  // Fallback: combine generic daily horoscope with birth chart summary (best-effort)
+  // Fallback: combine generic daily horoscope with birth chart 
   try {
     const generic = await fetchDailyHoroscope(signId as any).catch(() => null);
     let genericText = generic?.horoscope ?? '';

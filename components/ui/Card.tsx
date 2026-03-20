@@ -1,4 +1,3 @@
-// Reusable card 
 import { View, ViewProps } from "react-native";
 
 interface CardProps extends ViewProps {

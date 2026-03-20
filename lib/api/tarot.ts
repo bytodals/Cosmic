@@ -28,9 +28,8 @@ export async function fetchRandomTarot(count = 1, includeMinor = false): Promise
   return json.cards;
 }
 
-/**
- * Fetch all tarot cards  
-*/
+
+//Fetch all tarot cards  
 export async function fetchAllTarotCards(): Promise<TarotCard[]> {
   const url = `${BASE_URL}/tarot/cards`;
   const res = await fetch(url);

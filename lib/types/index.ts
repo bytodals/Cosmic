@@ -1,10 +1,9 @@
-// ───────────────────────────────────────────────
 // Zodiac-related types (static + validation)
-// ───────────────────────────────────────────────
 
-/**
- * Literal union of all valid zodiac sign IDs (exactly matches API expectation: lowercase)
- */
+
+
+ // all valid zodiac sign IDs - matches API expectation: lowercase
+
 export type ZodiacId =
   | 'aries'
   | 'taurus'
@@ -21,9 +20,9 @@ export type ZodiacId =
 
 export type ZodiacElement = 'Fire' | 'Earth' | 'Air' | 'Water';
 
-/**
- * static sign info (used for UI list, icons, colors, dates)
- */
+
+ // static sign info (UI list, icons, colors, dates)
+
 export interface ZodiacSign {
   slug: ZodiacId;
   name: string;          
@@ -32,9 +31,9 @@ export interface ZodiacSign {
   symbol: string;
   }
 
-/**
- * Type guard – very useful for dynamic routes & safety
- */
+
+ // type guard – for dynamic routes & safety
+
 export function isZodiacId(value: string): value is ZodiacId {
   const valid = [
     'aries','taurus','gemini','cancer','leo','virgo',
@@ -43,23 +42,23 @@ export function isZodiacId(value: string): value is ZodiacId {
   return valid.includes(value.toLowerCase() as any);
 }
 
-// ───────────────────────────────────────────────
+
 // API response types (from freehoroscopeapi.com)
-// ───────────────────────────────────────────────
+
 
 export interface HoroscopeResponse {
   data: {
     date: string;           // "2026-03-19"
     period: 'daily' | 'weekly' | 'monthly';
     sign: string;           // Capitalized: "Aries"
-    horoscope: string;      // The text content
+    horoscope: string;      // text
   };
 }
 
 export interface TarotCard {
   type: 'major' | 'minor';
   name: string;
-  name_short: string;     // e.g. "ar01", "w01"
+  name_short: string;     // tex "ar01", "w01"
   value?: string;
   value_int?: number;
   meaning_up: string;
@@ -73,35 +72,21 @@ export interface TarotResponse {
   cards: TarotCard[];
 }
 
-// ───────────────────────────────────────────────
-// App-specific / derived types (extra functionality)
-// ───────────────────────────────────────────────
 
-/**
- * For tarot info screen or daily draw
- */
+// App-specific / derived types
+// For tarot info screen or daily draw
+
 export interface TarotInsight {
   card: TarotCard;
-  position?: 'upright' | 'reversed'; // optional – you can add logic
-  personalInsight?: string;          // generated or static
+  position?: 'upright' | 'reversed'; 
+  personalInsight?: string;          
 }
 
-/**
- * For future birth chart feature (if you expand)
- */
+//future birth chart feature 
+
 export interface BirthChartSummary {
   sunSign: ZodiacId;
   moonSign?: ZodiacId;
   ascendant?: ZodiacId;
   summary?: string;
-}
-
-// Optional: if you want to add overviews later (static or from another source)
-export interface ZodiacOverview {
-  sign: ZodiacId;
-  strengths: string[];
-  challenges: string[];
-  compatibility: ZodiacId[]; // or string[]
-  luckyColor?: string;
-  luckyNumbers?: number[];
 }
