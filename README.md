@@ -72,12 +72,12 @@ Fetches real-time daily horoscopes and tarot cards from the public [freehoroscop
 
 - **Expo Router**: File-based routing is simpler, dynamic params are built-in, meets course navigation requirements
 - **NativeWind**: Enables Tailwind syntax in React Native, dark mode support, easy theme extension
-- **Custom hooks**: Keeps components clean (single responsibility), reusable, testable (VG level)
+- **Custom hooks**: Keeps components clean (single responsibility), reusable, testable 
 - **Strict TypeScript**: No `any`, typed props, typed API responses; prevents runtime errors, self-documenting code
 - **useMemo / useCallback**: Optimizes StarField animation performance
 - **AsyncStorage**: Simple offline persistence for birth details, no backend needed
 - **Robust error handling**: Loading spinners, user-friendly error messages, empty state handling
-- **Client-side search/filter**: Fast & offline-capable tarot card search (VG requirement)
+- **Client-side search/filter**: Fast & offline-capable tarot card search 
 
 ## How to Run
 
