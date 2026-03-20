@@ -103,13 +103,6 @@ const styles = {
 }
 ```
 
-## Accessibility
-
-- Minimum touch target: 44x44 px
-- Verify contrast on critical CTAs and icons
-- Test with large text (font scaling)
-- Add `accessibilityLabel` and `accessible` to images/icons
-
 ## Assets
 
 - Fonts: Cinzel (headings), Raleway (body) — see `app.json` / `expo-font` setup
