@@ -1,6 +1,6 @@
 import { Modal, View, Text, TouchableWithoutFeedback, Platform } from "react-native";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import type { TarotCard } from "@/lib/types";
 import { useState, useEffect } from "react";
 

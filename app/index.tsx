@@ -7,7 +7,7 @@ import ZodiacCard from "@/components/zodiac/ZodiacCard";
 import BirthDetailsModal from "@/components/modals/BirthDetailsModal";
 import { zodiacSigns } from "@/data/Zodiacs";
 import { useDailyTarot } from "@/hooks/useDailyTarot";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { saveBirthDetails, getBirthDetails, BirthDetails, clearBirthDetails, hasCompletedBirthDetails } from "@/lib/birthDetailsStorage";
 import { colors } from "@/constants/theme";
 

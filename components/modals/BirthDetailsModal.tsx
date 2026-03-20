@@ -6,7 +6,7 @@ import { Modal, ScrollView, Text, View, KeyboardAvoidingView, Platform, Touchabl
 
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 
 import {
   BirthDetails,

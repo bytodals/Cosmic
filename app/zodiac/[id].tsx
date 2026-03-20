@@ -8,7 +8,7 @@ import { useDailyHoroscope } from "@/hooks/useDailyHoroscope";
 import { zodiacSigns } from "@/data/Zodiacs";
 import type { ZodiacSign } from "@/data/Zodiacs";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 
 export default function ZodiacDetailScreen() {
   // get zodiac ID from route params

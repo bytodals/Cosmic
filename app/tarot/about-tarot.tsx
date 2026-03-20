@@ -7,7 +7,7 @@ import { spacing } from "@/constants/theme";
 import { colors } from "@/constants/theme";
 import { TarotCard } from "@/lib/types";
 import TarotDetailsModal from "@/components/modals/TarotDetailsModal";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 
 export default function AboutTarot() {
   const { cards: cardsArray, loading, error } = useAllTarotCards();

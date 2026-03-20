@@ -3,7 +3,7 @@ import { Link, useFocusEffect, useRouter } from "expo-router";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 import { Card } from "@/components/ui/Card";
-import { Button } from '@/components/ui/Button';
+import { Button } from "@/components/ui/button";
 import StarField from "@/components/effects/StarField";
 import { colors } from "@/constants/theme";
 import { useDailyHoroscope } from "@/hooks/useDailyHoroscope";

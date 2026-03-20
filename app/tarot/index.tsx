@@ -2,7 +2,7 @@ import { View, Text, ActivityIndicator, ScrollView, Dimensions } from "react-nat
 import StarField from "@/components/effects/StarField";
 import { useDailyTarot } from "@/hooks/useDailyTarot";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { Link } from "expo-router";
 import { colors } from "@/constants/theme";
 
